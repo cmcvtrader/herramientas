@@ -3,9 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arsenal de Herramientas IA</title>
+    <title>Arsenal Digital | Base de Conocimiento</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap');
+
+        :root {
+            /* PALETA NATURAL-INDUSTRIAL */
+            --marble-white: #fafaf9;       /* Mármol blanco cálido */
+            --concrete-light: #f5f5f4;     /* Cemento claro */
+            --concrete: #e7e5e4;           /* Cemento */
+            --concrete-dark: #d6d3d1;      /* Cemento oscuro */
+            
+            --gold-light: #fef3c7;         /* Dorado claro */
+            --gold: #f59e0b;               /* Dorado */
+            --gold-dark: #d97706;          /* Dorado oscuro */
+            
+            --sage-green: #84cc16;         /* Verde salvia vibrante */
+            --olive-green: #65a30d;        /* Verde oliva */
+            --forest-green: #4d7c0f;       /* Verde bosque */
+            
+            --text-dark: #292524;          /* Casi negro cálido */
+            --text-medium: #57534e;        /* Gris medio cálido */
+            --text-light: #78716c;         /* Gris claro cálido */
+            
+            /* Estados */
+            --free-bg: #f0fdf4;
+            --free-text: #15803d;
+            --freemium-bg: #fef3c7;
+            --freemium-text: #d97706;
+            --paid-bg: #fff1f2;
+            --paid-text: #e11d48;
+        }
 
         * {
             margin: 0;
@@ -13,53 +41,49 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #0f1419;
-            --card-bg: linear-gradient(135deg, #1a1f2e 0%, #141824 100%);
-            --text-primary: #ffffff;
-            --text-secondary: #a0aec0;
-            --text-muted: #718096;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #06b6d4;
-            --accent-pink: #ec4899;
-            --tag-free: #10b981;
-            --tag-freemium: #f59e0b;
-            --tag-paid: #ef4444;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
-            --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
-            --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0, transparent 50%);
+            background: linear-gradient(135deg, var(--marble-white) 0%, var(--concrete-light) 100%);
             background-attachment: fixed;
-            color: var(--text-primary);
-            overflow-x: hidden;
+            color: var(--text-dark);
+            padding: 40px 20px;
             line-height: 1.6;
+            position: relative;
+        }
+
+        /* Textura sutil de cemento/mármol */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Header */
+        /* HEADER: Elegante y minimalista */
         header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 60px 30px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 60px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(217, 119, 6, 0.1);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.05),
+                0 0 0 1px rgba(255, 255, 255, 0.8) inset;
             position: relative;
             overflow: hidden;
         }
@@ -70,194 +94,173 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--sage-green) 0%, 
+                var(--gold) 50%, 
+                var(--sage-green) 100%);
+            opacity: 0.7;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--gold-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
             letter-spacing: -1px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
+            color: var(--text-medium);
+            font-size: 1rem;
             font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
-        /* Stats */
-        .stats {
+        .status-badge {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .stat-label {
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, rgba(255, 255, 255, 0.8) 100%);
+            border-radius: 50px;
+            border: 1px solid var(--gold);
             font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--gold-dark);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
         }
 
-        /* Search Container */
-        .search-container {
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--sage-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* CONTROLES: Panel de vidrio esmerilado */
+        .controls {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(132, 204, 22, 0.1) inset;
+            display: flex;
+            gap: 16px;
             position: sticky;
             top: 20px;
             z-index: 100;
-            background: rgba(10, 14, 26, 0.8);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-xl);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 40px;
-            animation: slideDown 0.5s ease-out;
+            margin-bottom: 50px;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .search-wrapper {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .search-input-wrapper {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            pointer-events: none;
+        input#searchInput,
+        select#categoryFilter {
+            background: white;
+            border: 2px solid var(--concrete);
+            color: var(--text-dark);
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         input#searchInput {
-            width: 100%;
-            padding: 16px 20px 16px 50px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        input#searchInput:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
-
-        input#searchInput::placeholder {
-            color: var(--text-muted);
+            flex: 2;
         }
 
         select#categoryFilter {
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 500;
+            flex: 1;
             cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 200px;
         }
 
-        select#categoryFilter:hover {
-            border-color: var(--accent-purple);
-        }
-
+        input#searchInput:focus,
         select#categoryFilter:focus {
             outline: none;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            border-color: var(--sage-green);
+            box-shadow: 
+                0 0 0 3px rgba(132, 204, 22, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
         }
 
-        /* Grid */
+        input#searchInput::placeholder {
+            color: var(--text-light);
+        }
+
+        /* GRID */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            animation: fadeIn 0.6s ease-out;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 28px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Cards */
+        /* TARJETAS: Efecto mármol/cemento con profundidad */
         .card {
-            background: var(--card-bg);
+            background: 
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%, 
+                    rgba(250, 250, 249, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(231, 229, 228, 0.8);
             border-radius: 16px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 28px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             position: relative;
             overflow: hidden;
-            animation: cardAppear 0.5s ease-out backwards;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(255, 255, 255, 0.6) inset;
         }
 
-        @keyframes cardAppear {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Textura de mármol sutil */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(132, 204, 22, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
+            pointer-events: none;
         }
 
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--gold);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.12),
+                0 0 0 1px var(--gold-light) inset,
+                0 0 40px rgba(245, 158, 11, 0.15);
+        }
+
+        /* Borde dorado animado al hover */
         .card::before {
             content: '';
             position: absolute;
@@ -265,190 +268,175 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(90deg, 
+                var(--sage-green), 
+                var(--gold), 
+                var(--gold-dark));
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
         }
 
         .card:hover::before {
             transform: scaleX(1);
         }
 
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.15),
-                0 0 60px rgba(59, 130, 246, 0.2);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .card-header {
+        .card-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 18px;
-            gap: 10px;
-        }
-
-        .tool-info {
-            flex: 1;
+            position: relative;
+            z-index: 2;
         }
 
         .tool-family {
-            display: inline-block;
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
+            color: var(--gold-dark);
             font-weight: 700;
             margin-bottom: 8px;
-            padding: 4px 10px;
-            background: rgba(6, 182, 212, 0.15);
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--gold-light);
             border-radius: 6px;
         }
 
         .tool-name {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text-dark);
             margin: 0;
             line-height: 1.3;
+            font-family: 'Playfair Display', serif;
         }
 
+        /* BADGES: Estilo natural con bordes suaves */
         .badge {
-            font-size: 0.75rem;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: nowrap;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .badge.free {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
+            background: var(--free-bg);
+            color: var(--free-text);
+            border: 1px solid var(--free-text);
         }
 
         .badge.freemium {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
+            background: var(--freemium-bg);
+            color: var(--freemium-text);
+            border: 1px solid var(--freemium-text);
         }
 
         .badge.paid {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
+            background: var(--paid-bg);
+            color: var(--paid-text);
+            border: 1px solid var(--paid-text);
         }
 
-        .description {
+        .desc {
             font-size: 0.95rem;
-            color: var(--text-secondary);
+            color: var(--text-medium);
             margin-bottom: 20px;
+            flex-grow: 1;
             line-height: 1.7;
+            position: relative;
+            z-index: 2;
         }
 
-        .synergy-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border-left: 3px solid var(--accent-blue);
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 0.9rem;
+        /* SINERGIA: Caja de nota natural */
+        .synergy {
+            background: linear-gradient(135deg, 
+                rgba(132, 204, 22, 0.08) 0%, 
+                rgba(245, 158, 11, 0.05) 100%);
+            border-left: 3px solid var(--sage-green);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 16px;
+            font-size: 0.88rem;
+            color: var(--text-medium);
             margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 2px 8px rgba(132, 204, 22, 0.08);
+            position: relative;
+            z-index: 2;
         }
-
-        .synergy-title {
+        
+        .synergy strong { 
+            color: var(--olive-green);
             font-weight: 700;
-            color: var(--accent-blue);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
         }
 
-        .btn-link {
+        /* BOTÓN: Efecto dorado elegante */
+        .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            text-decoration: none;
+            background: linear-gradient(135deg, var(--sage-green) 0%, var(--olive-green) 100%);
             color: white;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            padding: 14px 20px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 600;
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 12px;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
             position: relative;
             overflow: hidden;
+            z-index: 2;
+            box-shadow: 0 4px 16px rgba(132, 204, 22, 0.3);
         }
 
-        .btn-link::before {
+        .btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
 
-        .btn-link:hover::before {
+        .btn:hover::before {
             left: 100%;
         }
 
-        .btn-link:hover {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 8px 24px rgba(132, 204, 22, 0.4);
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            border-color: var(--gold-light);
         }
 
-        .btn-link:active {
+        .btn:active {
             transform: translateY(0);
-        }
-
-        /* No results */
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .no-results-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .no-results-text {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            font-weight: 600;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-
-            header {
-                padding: 40px 20px;
-                margin-bottom: 30px;
-            }
-
             h1 {
                 font-size: 2rem;
             }
 
-            .search-container {
+            .controls {
+                flex-direction: column;
                 padding: 20px;
+            }
+
+            input#searchInput,
+            select#categoryFilter {
+                width: 100%;
             }
 
             .grid {
@@ -456,145 +444,158 @@
                 gap: 20px;
             }
 
-            .stats {
-                gap: 15px;
+            header {
+                padding: 30px 20px;
             }
 
-            .stat-item {
-                padding: 12px 20px;
+            .header-content {
+                flex-direction: column;
+                text-align: center;
             }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
+        /* Animaciones de entrada */
+        .card {
+            animation: fadeInUp 0.6s ease-out backwards;
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 10px;
-            border: 2px solid var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--accent-purple), var(--accent-pink));
-        }
-
-        /* Animation delays for cards */
         .card:nth-child(1) { animation-delay: 0.05s; }
         .card:nth-child(2) { animation-delay: 0.1s; }
         .card:nth-child(3) { animation-delay: 0.15s; }
         .card:nth-child(4) { animation-delay: 0.2s; }
         .card:nth-child(5) { animation-delay: 0.25s; }
         .card:nth-child(6) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--concrete-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--sage-green), var(--gold));
+            border-radius: 10px;
+            border: 2px solid var(--concrete-light);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+        }
+
+        /* Estado vacío */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            border: 2px dashed var(--concrete-dark);
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .no-results-text {
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🛠️ Arsenal de Herramientas IA</h1>
-        <p class="subtitle">Tu colección personal de recursos, utilidades y generadores impulsados por IA</p>
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number" id="totalTools">0</span>
-                <span class="stat-label">Herramientas</span>
+        <div class="header-content">
+            <div>
+                <h1>Arsenal Digital</h1>
+                <p class="subtitle">Biblioteca de Recursos · IA & Desarrollo</p>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" id="freeTools">0</span>
-                <span class="stat-label">Gratuitas</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" id="categories">0</span>
-                <span class="stat-label">Categorías</span>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>Sistema Activo</span>
             </div>
         </div>
     </header>
 
-    <div class="search-container">
-        <div class="search-wrapper">
-            <div class="search-input-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar por nombre, descripción o función...">
-            </div>
-            <select id="categoryFilter">
-                <option value="all">📂 Todas las Categorías</option>
-                <option value="video">🎬 Video y Audio</option>
-                <option value="imagen">🎨 Imagen y Diseño</option>
-                <option value="texto">📝 Texto, Código y Cerebros</option>
-                <option value="utilidad">⚡ Utilidades y Varios</option>
-            </select>
-        </div>
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Buscar herramienta, función o categoría...">
+        <select id="categoryFilter">
+            <option value="all">📚 Todas las Categorías</option>
+            <option value="video">🎬 Video & Audio</option>
+            <option value="imagen">🎨 Imagen & Diseño</option>
+            <option value="texto">📝 Texto & Código</option>
+            <option value="utilidad">⚡ Utilidades</option>
+        </select>
     </div>
 
     <div id="toolsGrid" class="grid"></div>
 </div>
 
 <script>
-    // BASE DE DATOS DE HERRAMIENTAS
+    // BASE DE DATOS
     const toolsDB = [
         // VIDEO Y AUDIO
-        { name: "Kling 3.0", family: "Video", price: "Freemium", desc: "Generación de video hiperrealista text-to-video de última generación.", synergy: "Usar prompts de Grok.", url: "https://kling.kuaishou.com/" },
-        { name: "MiniMax", family: "Video", price: "Freemium", desc: "Modelo de video Hailuo AI, alta coherencia temporal.", synergy: "Alternativa si Kling falla.", url: "#" },
-        { name: "Wan (Wan 2.1)", family: "Video", price: "Gratis", desc: "IA de video de Alibaba. Open source, excelente movimiento.", synergy: "Animar fotos de Nano Banana.", url: "#" },
-        { name: "Invideo.io", family: "Video", price: "Freemium", desc: "Creación de videos completos a partir de texto con stock.", synergy: "Usar guiones de NotebookLM.", url: "https://invideo.io" },
+        { name: "Kling 3.0", family: "Video", price: "Freemium", desc: "Generación de video hiperrealista text-to-video. Modelo físico avanzado.", synergy: "Input: Prompts detallados de Grok.", url: "https://kling.kuaishou.com/" },
+        { name: "MiniMax", family: "Video", price: "Freemium", desc: "Modelo Hailuo AI. Destaca en coherencia temporal y movimiento complejo.", synergy: "Alternativa si Kling falla.", url: "#" },
+        { name: "Wan (Wan 2.1)", family: "Video", price: "Gratis", desc: "Modelo Open Source de Alibaba. Movimiento fluido y realista.", synergy: "Input: Fotos estáticas de Nano Banana.", url: "#" },
+        { name: "Invideo.io", family: "Video", price: "Freemium", desc: "Texto a Video completo con stock y voz en off.", synergy: "Input: Guiones de NotebookLM.", url: "https://invideo.io" },
         { name: "Opus Clip", family: "Video", price: "Freemium", desc: "Recorta videos largos en Shorts virales automáticamente.", synergy: "Podcast → Shorts.", url: "https://www.opus.pro" },
-        { name: "VocalRemover", family: "Audio", price: "Gratis", desc: "Separa voz y música de cualquier canción.", synergy: "Limpiar audio para edición.", url: "https://vocalremover.org" },
-        { name: "AudioShake.ai", family: "Audio", price: "Pago", desc: "Separación de pistas (stems) de nivel profesional.", synergy: "Uso avanzado musical.", url: "https://audioshake.ai" },
-        { name: "Mixkit.co", family: "Video", price: "Gratis", desc: "Stock gratuito de video, música y plantillas Premiere.", synergy: "Recursos base para editores.", url: "https://mixkit.co" },
-        { name: "Crashort.ai", family: "Video", price: "Freemium", desc: "Generación automatizada de cortos (posible Crayo).", synergy: "", url: "#" },
+        { name: "VocalRemover", family: "Audio", price: "Gratis", desc: "Aislamiento de pistas (Voz vs Música).", synergy: "Output: Audio limpio para edición.", url: "https://vocalremover.org" },
+        { name: "AudioShake.ai", family: "Audio", price: "Pago", desc: "Separación de stems profesional.", synergy: "Uso avanzado musical.", url: "https://audioshake.ai" },
+        { name: "Mixkit.co", family: "Video", price: "Gratis", desc: "Assets gratuitos: Stock video, música, plantillas Premiere.", synergy: "Recursos base.", url: "https://mixkit.co" },
+        { name: "Crashort.ai", family: "Video", price: "Freemium", desc: "Automatización de clips cortos.", synergy: "", url: "#" },
         
         // IMAGEN Y DISEÑO
-        { name: "Nano Banana (Gemini)", family: "Imagen", price: "Gratis", desc: "Generación y edición de imágenes (Modelo Google).", synergy: "Crear base para Wan/Kling.", url: "#" },
-        { name: "Remove.bg", family: "Imagen", price: "Freemium", desc: "Eliminar fondo de imágenes automáticamente.", synergy: "Limpiar → Canva/Gamma.", url: "https://www.remove.bg" },
-        { name: "LetsEnhance.io", family: "Imagen", price: "Freemium", desc: "Escalado de imágenes (Upscaling) para mejorar calidad.", synergy: "Usar tras generar imagen pequeña.", url: "https://letsenhance.io" },
-        { name: "Pexels / Pixabay", family: "Imagen", price: "Gratis", desc: "Bancos de imágenes y videos de stock gratuitos.", synergy: "", url: "https://www.pexels.com" },
-        { name: "Unsplash", family: "Imagen", price: "Gratis", desc: "Fotografía de stock de alta calidad artística.", synergy: "", url: "https://unsplash.com" },
-        { name: "Tenorshare Pdnob", family: "Imagen", price: "Freemium", desc: "OCR y capturas. Extrae texto de imágenes.", synergy: "Imagen → Texto → Copy.ai.", url: "#" },
-        { name: "Readdy", family: "Imagen", price: "Freemium", desc: "Visualización arquitectónica y Real Estate.", synergy: "", url: "#" },
-        { name: "Brickit App", family: "Imagen", price: "Gratis", desc: "Escanea piezas LEGO y sugiere construcciones.", synergy: "Ocio creativo.", url: "https://brickit.app" },
+        { name: "Nano Banana", family: "Imagen", price: "Gratis", desc: "Modelo Gemini para generación y edición de imágenes.", synergy: "Crear assets base para video.", url: "#" },
+        { name: "Remove.bg", family: "Imagen", price: "Freemium", desc: "Eliminación de fondo mediante IA.", synergy: "Limpiar → Canva/Gamma.", url: "https://www.remove.bg" },
+        { name: "LetsEnhance.io", family: "Imagen", price: "Freemium", desc: "Upscaling de imágenes (mejora de resolución).", synergy: "Post-procesado de Midjourney.", url: "https://letsenhance.io" },
+        { name: "Pexels / Unsplash", family: "Imagen", price: "Gratis", desc: "Bancos de imágenes y video stock alta calidad.", synergy: "Material bruto.", url: "https://www.pexels.com" },
+        { name: "Tenorshare Pdnob", family: "Imagen", price: "Freemium", desc: "OCR y captura de texto en pantalla.", synergy: "Imagen → Texto → Copy.ai.", url: "#" },
+        { name: "Readdy", family: "Imagen", price: "Freemium", desc: "Visualización arquitectónica y Real Estate.", synergy: "Ideal para Chelonia.", url: "#" },
+        { name: "Brickit App", family: "Imagen", price: "Gratis", desc: "Escáner LEGO para sugerencias de construcción.", synergy: "Ocio.", url: "https://brickit.app" },
 
-        // TEXTO, CODIGO Y PRODUCTIVIDAD
-        { name: "NotebookLM", family: "Texto", price: "Gratis", desc: "Tu cerebro IA para documentos. Genera podcasts de tus PDF.", synergy: "PDF → Resumen → Video.", url: "https://notebooklm.google.com" },
-        { name: "Grok", family: "Texto", price: "Pago", desc: "LLM de xAI con acceso a X en tiempo real.", synergy: "Detectar tendencias.", url: "https://x.ai" },
-        { name: "Gemini Canvas", family: "Texto", price: "Gratis", desc: "Entorno de trabajo para escribir y codificar colaborativamente.", synergy: "Código → Lovable.", url: "https://gemini.google.com" },
-        { name: "Blackbox.ai", family: "Texto", price: "Freemium", desc: "Asistente de código especializado y búsqueda dev.", synergy: "", url: "https://www.blackbox.ai" },
-        { name: "Copy.ai", family: "Texto", price: "Freemium", desc: "Generación de copy para marketing y blogs.", synergy: "Copy → Smsuite.", url: "https://www.copy.ai" },
-        { name: "Lovable", family: "Texto", price: "Freemium", desc: "Generador de aplicaciones web Full Stack.", synergy: "Prototipar ideas rápido.", url: "https://lovable.dev" },
-        { name: "Build (Buildt)", family: "Texto", price: "Freemium", desc: "Búsqueda de código y asistencia dev.", synergy: "", url: "#" },
-        { name: "Apob.ai", family: "Texto", price: "Freemium", desc: "Chat con personajes IA (Roleplay).", synergy: "", url: "#" },
-        { name: "Slang Hang", family: "Texto", price: "Freemium", desc: "Asistente de lenguaje/inglés profesional.", synergy: "", url: "#" },
+        // TEXTO, CÓDIGO Y PRODUCTIVIDAD
+        { name: "NotebookLM", family: "Texto", price: "Gratis", desc: "RAG personal. 'Cerebro' para documentos y generador de podcasts.", synergy: "PDFs → Resumen → Guion.", url: "https://notebooklm.google.com" },
+        { name: "Grok", family: "Texto", price: "Pago", desc: "LLM con acceso a X (Twitter) en tiempo real.", synergy: "Detección de tendencias.", url: "https://x.ai" },
+        { name: "Gemini Canvas", family: "Texto", price: "Gratis", desc: "Entorno de escritura y código colaborativo.", synergy: "Código → Lovable.", url: "https://gemini.google.com" },
+        { name: "Blackbox.ai", family: "Texto", price: "Freemium", desc: "Asistente de código especializado.", synergy: "", url: "https://www.blackbox.ai" },
+        { name: "Copy.ai", family: "Texto", price: "Freemium", desc: "Generación de copy marketing/blog.", synergy: "Output → Smsuite.", url: "https://www.copy.ai" },
+        { name: "Lovable", family: "Texto", price: "Freemium", desc: "Generador de Web Apps Full Stack.", synergy: "Prototipado rápido.", url: "https://lovable.dev" },
+        { name: "Build (Buildt)", family: "Texto", price: "Freemium", desc: "Búsqueda semántica de código.", synergy: "", url: "#" },
+        { name: "10Web.io", family: "Texto", price: "Freemium", desc: "Clonador y generador de Webs WordPress.", synergy: "Crear web Chelonia.", url: "https://10web.io" },
+        { name: "Apob.ai", family: "Texto", price: "Freemium", desc: "Simulación de personajes IA.", synergy: "", url: "#" },
 
-        // UTILIDADES Y VARIOS
-        { name: "TinyWow.com", family: "Utilidad", price: "Gratis", desc: "Navaja suiza: PDF, Video, Conversión de archivos.", synergy: "Cuando todo falla, usa esto.", url: "https://tinywow.com" },
-        { name: "Web Check", family: "Utilidad", price: "Gratis", desc: "Análisis de seguridad y datos de sitios web.", synergy: "Investigar competencia.", url: "https://web-check.xyz" },
-        { name: "Social Searcher", family: "Utilidad", price: "Gratis", desc: "Monitorización de menciones en redes sociales.", synergy: "Ver reputación online.", url: "https://www.social-searcher.com" },
-        { name: "Archive.org", family: "Utilidad", price: "Gratis", desc: "Wayback Machine: Ver versiones antiguas de webs.", synergy: "Recuperar datos perdidos.", url: "https://archive.org" },
-        { name: "Opal", family: "Utilidad", price: "Freemium", desc: "Bloqueador de apps para concentración (Focus).", synergy: "", url: "https://www.opal.so" },
-        { name: "Smsuite.io", family: "Utilidad", price: "Freemium", desc: "Gestión y programación de redes sociales.", synergy: "Programar lo creado con Copy.ai.", url: "#" },
-        { name: "Buscador.net.ar", family: "Utilidad", price: "Gratis", desc: "Buscador de recursos (Argentina).", synergy: "", url: "#" },
-        { name: "Abacus.ai", family: "Utilidad", price: "Pago", desc: "Plataforma de IA y ML empresarial.", synergy: "", url: "#" },
-        { name: "Grow.Google", family: "Utilidad", price: "Gratis", desc: "Cursos y certificaciones de Google.", synergy: "Aprendizaje.", url: "https://grow.google" }
+        // UTILIDADES
+        { name: "TinyWow.com", family: "Utilidad", price: "Gratis", desc: "Suite de herramientas PDF, Video, Conversión.", synergy: "Navaja suiza.", url: "https://tinywow.com" },
+        { name: "Web Check", family: "Utilidad", price: "Gratis", desc: "OSINT: Análisis de seguridad e info de dominio.", synergy: "Investigación.", url: "https://web-check.xyz" },
+        { name: "Social Searcher", family: "Utilidad", price: "Gratis", desc: "Monitorización de menciones en redes.", synergy: "Reputación online.", url: "https://www.social-searcher.com" },
+        { name: "Archive.org", family: "Utilidad", price: "Gratis", desc: "Wayback Machine: Histórico web.", synergy: "", url: "https://archive.org" },
+        { name: "Opal", family: "Utilidad", price: "Freemium", desc: "Bloqueo de distracciones (Deep Work).", synergy: "", url: "https://www.opal.so" },
+        { name: "Smsuite.io", family: "Utilidad", price: "Freemium", desc: "Gestión RRSS.", synergy: "", url: "#" },
+        { name: "Grow.Google", family: "Utilidad", price: "Gratis", desc: "Certificaciones y cursos.", synergy: "Formación.", url: "https://grow.google" }
     ];
 
     const grid = document.getElementById('toolsGrid');
     const searchInput = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
-
-    // Calcular estadísticas
-    function updateStats() {
-        const totalTools = toolsDB.length;
-        const freeTools = toolsDB.filter(t => t.price.toLowerCase().includes('gratis')).length;
-        const uniqueFamilies = [...new Set(toolsDB.map(t => t.family))].length;
-
-        document.getElementById('totalTools').textContent = totalTools;
-        document.getElementById('freeTools').textContent = freeTools;
-        document.getElementById('categories').textContent = uniqueFamilies;
-    }
 
     function renderTools(list) {
         grid.innerHTML = '';
@@ -610,36 +611,31 @@
         }
 
         list.forEach((tool, index) => {
-            // Determinar clase de precio
             let priceClass = '';
             if (tool.price.toLowerCase().includes('gratis')) priceClass = 'free';
             else if (tool.price.toLowerCase().includes('freemium')) priceClass = 'freemium';
             else priceClass = 'paid';
 
-            // HTML de Sinergia (solo si existe)
             const synergyHTML = tool.synergy ? 
-                `<div class="synergy-box">
-                    <span class="synergy-title">🔗 Sinergia</span>
-                    ${tool.synergy}
-                </div>` : '';
+                `<div class="synergy"><strong>⚡ Sinergia:</strong> ${tool.synergy}</div>` : '';
 
             const card = document.createElement('div');
             card.className = 'card';
             card.style.animationDelay = `${index * 0.05}s`;
             card.innerHTML = `
                 <div>
-                    <div class="card-header">
-                        <div class="tool-info">
+                    <div class="card-top">
+                        <div>
                             <span class="tool-family">${tool.family}</span>
                             <h3 class="tool-name">${tool.name}</h3>
                         </div>
                         <span class="badge ${priceClass}">${tool.price}</span>
                     </div>
-                    <p class="description">${tool.desc}</p>
+                    <p class="desc">${tool.desc}</p>
                     ${synergyHTML}
                 </div>
-                <a href="${tool.url}" target="_blank" class="btn-link">
-                    <span>Ir a la herramienta</span>
+                <a href="${tool.url}" target="_blank" class="btn">
+                    <span>Abrir Herramienta</span>
                     <span>→</span>
                 </a>
             `;
@@ -665,14 +661,11 @@
         renderTools(filtered);
     }
 
-    // Event Listeners
     searchInput.addEventListener('input', filterTools);
     categoryFilter.addEventListener('change', filterTools);
 
-    // Inicialización
-    updateStats();
+    // Render inicial
     renderTools(toolsDB);
-
 </script>
 
 </body>
