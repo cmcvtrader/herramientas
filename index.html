@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenal de Herramientas IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1419;
+            --card-bg: linear-gradient(135deg, #1a1f2e 0%, #141824 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --accent-pink: #ec4899;
+            --tag-free: #10b981;
+            --tag-freemium: #f59e0b;
+            --tag-paid: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+            --shadow-xl: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 60px 30px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Search Container */
+        .search-container {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(10, 14, 26, 0.8);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        input#searchInput {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        input#searchInput:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        input#searchInput::placeholder {
+            color: var(--text-muted);
+        }
+
+        select#categoryFilter {
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        select#categoryFilter:hover {
+            border-color: var(--accent-purple);
+        }
+
+        select#categoryFilter:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.5s ease-out backwards;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.15),
+                0 0 60px rgba(59, 130, 246, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 10px;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-family {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding: 4px 10px;
+            background: rgba(6, 182, 212, 0.15);
+            border-radius: 6px;
+        }
+
+        .tool-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .badge.free {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .badge.freemium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .badge.paid {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .synergy-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-left: 3px solid var(--accent-blue);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .synergy-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .btn-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            padding: 14px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-link:hover::before {
+            left: 100%;
+        }
+
+        .btn-link:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-link:active {
+            transform: translateY(0);
+        }
+
+        /* No results */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-results-text {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            header {
+                padding: 40px 20px;
+                margin-bottom: 30px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                padding: 12px 20px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 10px;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--accent-purple), var(--accent-pink));
+        }
+
+        /* Animation delays for cards */
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.15s; }
+        .card:nth-child(4) { animation-delay: 0.2s; }
+        .card:nth-child(5) { animation-delay: 0.25s; }
+        .card:nth-child(6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🛠️ Arsenal de Herramientas IA</h1>
+        <p class="subtitle">Tu colección personal de recursos, utilidades y generadores impulsados por IA</p>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="totalTools">0</span>
+                <span class="stat-label">Herramientas</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="freeTools">0</span>
+                <span class="stat-label">Gratuitas</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="categories">0</span>
+                <span class="stat-label">Categorías</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar por nombre, descripción o función...">
+            </div>
+            <select id="categoryFilter">
+                <option value="all">📂 Todas las Categorías</option>
+                <option value="video">🎬 Video y Audio</option>
+                <option value="imagen">🎨 Imagen y Diseño</option>
+                <option value="texto">📝 Texto, Código y Cerebros</option>
+                <option value="utilidad">⚡ Utilidades y Varios</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="toolsGrid" class="grid"></div>
+</div>
+
+<script>
+    // BASE DE DATOS DE HERRAMIENTAS
+    const toolsDB = [
+        // VIDEO Y AUDIO
+        { name: "Kling 3.0", family: "Video", price: "Freemium", desc: "Generación de video hiperrealista text-to-video de última generación.", synergy: "Usar prompts de Grok.", url: "https://kling.kuaishou.com/" },
+        { name: "MiniMax", family: "Video", price: "Freemium", desc: "Modelo de video Hailuo AI, alta coherencia temporal.", synergy: "Alternativa si Kling falla.", url: "#" },
+        { name: "Wan (Wan 2.1)", family: "Video", price: "Gratis", desc: "IA de video de Alibaba. Open source, excelente movimiento.", synergy: "Animar fotos de Nano Banana.", url: "#" },
+        { name: "Invideo.io", family: "Video", price: "Freemium", desc: "Creación de videos completos a partir de texto con stock.", synergy: "Usar guiones de NotebookLM.", url: "https://invideo.io" },
+        { name: "Opus Clip", family: "Video", price: "Freemium", desc: "Recorta videos largos en Shorts virales automáticamente.", synergy: "Podcast → Shorts.", url: "https://www.opus.pro" },
+        { name: "VocalRemover", family: "Audio", price: "Gratis", desc: "Separa voz y música de cualquier canción.", synergy: "Limpiar audio para edición.", url: "https://vocalremover.org" },
+        { name: "AudioShake.ai", family: "Audio", price: "Pago", desc: "Separación de pistas (stems) de nivel profesional.", synergy: "Uso avanzado musical.", url: "https://audioshake.ai" },
+        { name: "Mixkit.co", family: "Video", price: "Gratis", desc: "Stock gratuito de video, música y plantillas Premiere.", synergy: "Recursos base para editores.", url: "https://mixkit.co" },
+        { name: "Crashort.ai", family: "Video", price: "Freemium", desc: "Generación automatizada de cortos (posible Crayo).", synergy: "", url: "#" },
+        
+        // IMAGEN Y DISEÑO
+        { name: "Nano Banana (Gemini)", family: "Imagen", price: "Gratis", desc: "Generación y edición de imágenes (Modelo Google).", synergy: "Crear base para Wan/Kling.", url: "#" },
+        { name: "Remove.bg", family: "Imagen", price: "Freemium", desc: "Eliminar fondo de imágenes automáticamente.", synergy: "Limpiar → Canva/Gamma.", url: "https://www.remove.bg" },
+        { name: "LetsEnhance.io", family: "Imagen", price: "Freemium", desc: "Escalado de imágenes (Upscaling) para mejorar calidad.", synergy: "Usar tras generar imagen pequeña.", url: "https://letsenhance.io" },
+        { name: "Pexels / Pixabay", family: "Imagen", price: "Gratis", desc: "Bancos de imágenes y videos de stock gratuitos.", synergy: "", url: "https://www.pexels.com" },
+        { name: "Unsplash", family: "Imagen", price: "Gratis", desc: "Fotografía de stock de alta calidad artística.", synergy: "", url: "https://unsplash.com" },
+        { name: "Tenorshare Pdnob", family: "Imagen", price: "Freemium", desc: "OCR y capturas. Extrae texto de imágenes.", synergy: "Imagen → Texto → Copy.ai.", url: "#" },
+        { name: "Readdy", family: "Imagen", price: "Freemium", desc: "Visualización arquitectónica y Real Estate.", synergy: "", url: "#" },
+        { name: "Brickit App", family: "Imagen", price: "Gratis", desc: "Escanea piezas LEGO y sugiere construcciones.", synergy: "Ocio creativo.", url: "https://brickit.app" },
+
+        // TEXTO, CODIGO Y PRODUCTIVIDAD
+        { name: "NotebookLM", family: "Texto", price: "Gratis", desc: "Tu cerebro IA para documentos. Genera podcasts de tus PDF.", synergy: "PDF → Resumen → Video.", url: "https://notebooklm.google.com" },
+        { name: "Grok", family: "Texto", price: "Pago", desc: "LLM de xAI con acceso a X en tiempo real.", synergy: "Detectar tendencias.", url: "https://x.ai" },
+        { name: "Gemini Canvas", family: "Texto", price: "Gratis", desc: "Entorno de trabajo para escribir y codificar colaborativamente.", synergy: "Código → Lovable.", url: "https://gemini.google.com" },
+        { name: "Blackbox.ai", family: "Texto", price: "Freemium", desc: "Asistente de código especializado y búsqueda dev.", synergy: "", url: "https://www.blackbox.ai" },
+        { name: "Copy.ai", family: "Texto", price: "Freemium", desc: "Generación de copy para marketing y blogs.", synergy: "Copy → Smsuite.", url: "https://www.copy.ai" },
+        { name: "Lovable", family: "Texto", price: "Freemium", desc: "Generador de aplicaciones web Full Stack.", synergy: "Prototipar ideas rápido.", url: "https://lovable.dev" },
+        { name: "Build (Buildt)", family: "Texto", price: "Freemium", desc: "Búsqueda de código y asistencia dev.", synergy: "", url: "#" },
+        { name: "Apob.ai", family: "Texto", price: "Freemium", desc: "Chat con personajes IA (Roleplay).", synergy: "", url: "#" },
+        { name: "Slang Hang", family: "Texto", price: "Freemium", desc: "Asistente de lenguaje/inglés profesional.", synergy: "", url: "#" },
+
+        // UTILIDADES Y VARIOS
+        { name: "TinyWow.com", family: "Utilidad", price: "Gratis", desc: "Navaja suiza: PDF, Video, Conversión de archivos.", synergy: "Cuando todo falla, usa esto.", url: "https://tinywow.com" },
+        { name: "Web Check", family: "Utilidad", price: "Gratis", desc: "Análisis de seguridad y datos de sitios web.", synergy: "Investigar competencia.", url: "https://web-check.xyz" },
+        { name: "Social Searcher", family: "Utilidad", price: "Gratis", desc: "Monitorización de menciones en redes sociales.", synergy: "Ver reputación online.", url: "https://www.social-searcher.com" },
+        { name: "Archive.org", family: "Utilidad", price: "Gratis", desc: "Wayback Machine: Ver versiones antiguas de webs.", synergy: "Recuperar datos perdidos.", url: "https://archive.org" },
+        { name: "Opal", family: "Utilidad", price: "Freemium", desc: "Bloqueador de apps para concentración (Focus).", synergy: "", url: "https://www.opal.so" },
+        { name: "Smsuite.io", family: "Utilidad", price: "Freemium", desc: "Gestión y programación de redes sociales.", synergy: "Programar lo creado con Copy.ai.", url: "#" },
+        { name: "Buscador.net.ar", family: "Utilidad", price: "Gratis", desc: "Buscador de recursos (Argentina).", synergy: "", url: "#" },
+        { name: "Abacus.ai", family: "Utilidad", price: "Pago", desc: "Plataforma de IA y ML empresarial.", synergy: "", url: "#" },
+        { name: "Grow.Google", family: "Utilidad", price: "Gratis", desc: "Cursos y certificaciones de Google.", synergy: "Aprendizaje.", url: "https://grow.google" }
+    ];
+
+    const grid = document.getElementById('toolsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    // Calcular estadísticas
+    function updateStats() {
+        const totalTools = toolsDB.length;
+        const freeTools = toolsDB.filter(t => t.price.toLowerCase().includes('gratis')).length;
+        const uniqueFamilies = [...new Set(toolsDB.map(t => t.family))].length;
+
+        document.getElementById('totalTools').textContent = totalTools;
+        document.getElementById('freeTools').textContent = freeTools;
+        document.getElementById('categories').textContent = uniqueFamilies;
+    }
+
+    function renderTools(list) {
+        grid.innerHTML = '';
+        
+        if (list.length === 0) {
+            grid.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <p class="no-results-text">No se encontraron herramientas con esos criterios</p>
+                </div>
+            `;
+            return;
+        }
+
+        list.forEach((tool, index) => {
+            // Determinar clase de precio
+            let priceClass = '';
+            if (tool.price.toLowerCase().includes('gratis')) priceClass = 'free';
+            else if (tool.price.toLowerCase().includes('freemium')) priceClass = 'freemium';
+            else priceClass = 'paid';
+
+            // HTML de Sinergia (solo si existe)
+            const synergyHTML = tool.synergy ? 
+                `<div class="synergy-box">
+                    <span class="synergy-title">🔗 Sinergia</span>
+                    ${tool.synergy}
+                </div>` : '';
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.animationDelay = `${index * 0.05}s`;
+            card.innerHTML = `
+                <div>
+                    <div class="card-header">
+                        <div class="tool-info">
+                            <span class="tool-family">${tool.family}</span>
+                            <h3 class="tool-name">${tool.name}</h3>
+                        </div>
+                        <span class="badge ${priceClass}">${tool.price}</span>
+                    </div>
+                    <p class="description">${tool.desc}</p>
+                    ${synergyHTML}
+                </div>
+                <a href="${tool.url}" target="_blank" class="btn-link">
+                    <span>Ir a la herramienta</span>
+                    <span>→</span>
+                </a>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filterTools() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const category = categoryFilter.value.toLowerCase();
+
+        const filtered = toolsDB.filter(tool => {
+            const matchesSearch = tool.name.toLowerCase().includes(searchTerm) || 
+                                  tool.desc.toLowerCase().includes(searchTerm) ||
+                                  tool.family.toLowerCase().includes(searchTerm) ||
+                                  (tool.synergy && tool.synergy.toLowerCase().includes(searchTerm));
+            
+            const matchesCategory = category === 'all' || tool.family.toLowerCase().includes(category);
+
+            return matchesSearch && matchesCategory;
+        });
+
+        renderTools(filtered);
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', filterTools);
+    categoryFilter.addEventListener('change', filterTools);
+
+    // Inicialización
+    updateStats();
+    renderTools(toolsDB);
+
+</script>
+
+</body>
+</html>
