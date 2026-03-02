@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estratega Digital — Máquina de Ventas</title>
+<meta name="description" content="Diseño ecosistemas digitales completos que convierten visitantes en clientes. Embudos, webs, redes y email marketing a medida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Tu paleta corporativa */
+  --marble-white: #fafaf9;
+  --concrete:     #e7e5e4;
+  --gold:         #f59e0b;
+  --gold-d:       #d97706;
+  --sage-green:   #84cc16;
+  --olive-green:  #65a30d;
+  --text-dark:    #292524;
+  --white-pure:   #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--marble-white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ─── CURSOR GLOW ── */
+.cursor-glow {
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 70%);
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s ease;
+}
+
+/* ─── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  background: rgba(250, 250, 249, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--concrete);
+  transition: padding 0.3s;
+}
+nav.scrolled { padding: 14px 48px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  color: var(--text-dark);
+}
+.nav-logo span { color: var(--gold); font-style: italic; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  opacity: 0.7;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--gold); opacity: 1; }
+
+.nav-cta {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--white-pure);
+  background: var(--text-dark);
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.nav-cta:hover { background: var(--gold); transform: translateY(-1px); }
+
+/* ─── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--marble-white);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  padding: 140px 48px 80px;
+  position: relative;
+  overflow: hidden;
+  gap: 60px;
+}
+
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--concrete) 1px, transparent 1px),
+    linear-gradient(90deg, var(--concrete) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+}
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);
+  top: -100px; right: -100px;
+}
+.hero-orb-2 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(132,204,22,0.1) 0%, transparent 70%);
+  bottom: -80px; left: 20%;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-d);
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 32px; height: 2px;
+  background: var(--gold);
+}
+
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 6vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-dark);
+  margin-bottom: 28px;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.hero-body {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  opacity: 0.8;
+  max-width: 480px;
+  margin-bottom: 44px;
+  font-weight: 300;
+}
+
+.hero-actions { display: flex; gap: 20px; align-items: center; }
+
+.btn-primary {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--white-pure);
+  background: var(--gold);
+  padding: 18px 36px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(245,158,11,0.2);
+}
+.btn-primary:hover {
+  background: var(--gold-d);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245,158,11,0.3);
+}
+
+.btn-ghost {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-dark);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--gold); }
+.btn-ghost::after { content: '↓'; color: var(--gold); }
+
+/* Hero stats panel */
+.hero-stats { position: relative; z-index: 2; }
+
+.stat-card-main {
+  background: var(--white-pure);
+  border: 1px solid var(--concrete);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+.stat-card-main:hover { 
+  border-color: rgba(245,158,11,0.4); 
+  box-shadow: 0 10px 30px rgba(245,158,11,0.08);
+}
+.stat-card-main::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--sage-green));
+}
+
+.big-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+.big-label {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  opacity: 0.7;
+  margin-top: 10px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.stat-mini {
+  background: var(--white-pure);
+  border: 1px solid var(--concrete);
+  border-radius: 14px;
+  padding: 26px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.stat-mini:hover {
+  border-color: rgba(132,204,22,0.4);
+  box-shadow: 0 8px 20px rgba(132,204,22,0.08);
+}
+.stat-mini .num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--sage-green);
+  line-height: 1;
+}
+.stat-mini .lbl {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  opacity: 0.7;
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+/* ─── TICKER ── */
+.ticker-wrap {
+  background: var(--text-dark);
+  padding: 16px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex;
+  animation: ticker 25s linear infinite;
+}
+.ticker-item {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white-pure);
+  padding: 0 32px;
+}
+.ticker-sep { color: var(--gold); font-size: 1rem; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── TRUST BAR ── */
+.trust-bar {
+  padding: 40px 48px;
+  border-bottom: 1px solid var(--concrete);
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  overflow: hidden;
+  background: var(--white-pure);
+}
+.trust-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-d);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.trust-items {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.trust-item {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-dark);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* ─── PHILOSOPHY ── */
+.philosophy {
+  padding: 120px 48px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 80px;
+  align-items: start;
+  border-bottom: 1px solid var(--concrete);
+  background: var(--marble-white);
+}
+.philo-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sage-green);
+  padding-top: 10px;
+  position: sticky;
+  top: 100px;
+}
+.philo-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  color: var(--text-dark);
+}
+.philo-text h2 span { color: var(--gold); font-style: italic; font-weight: 600;}
+
+.philo-text p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  opacity: 0.8;
+  max-width: 600px;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.philo-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.philo-metric {
+  padding: 30px 24px;
+  border: 1px solid var(--concrete);
+  border-radius: 12px;
+  background: var(--white-pure);
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+.philo-metric .m-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--olive-green);
+  line-height: 1;
+}
+.philo-metric .m-lbl {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  opacity: 0.7;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* ─── SERVICES ── */
+.services {
+  padding: 120px 48px;
+  background: var(--white-pure);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.services-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 72px;
+}
+.services-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.services-header h2 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--sage-green);
+}
+.services-header p {
+  font-size: 1rem;
+  color: var(--text-dark);
+  opacity: 0.7;
+  max-width: 280px;
+  text-align: right;
+  line-height: 1.7;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.svc-card {
+  background: var(--marble-white);
+  border: 1px solid var(--concrete);
+  border-radius: 16px;
+  padding: 52px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.svc-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: var(--gold);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s ease;
+}
+.svc-card:hover { 
+  background: var(--white-pure);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+  border-color: rgba(245,158,11,0.3);
+}
+.svc-card:hover::before { transform: scaleY(1); }
+
+.svc-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.svc-icon { font-size: 2.5rem; margin-bottom: 24px; display: block; }
+.svc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+.svc-desc {
+  font-size: 1rem;
+  color: var(--text-dark);
+  opacity: 0.75;
+  line-height: 1.7;
+  font-weight: 300;
+}
+.svc-tag {
+  display: inline-block;
+  margin-top: 32px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--olive-green);
+  background: rgba(132,204,22,0.1);
+  padding: 8px 16px;
+  border-radius: 100px;
+}
+
+/* ─── PROCESS ── */
+.process {
+  padding: 120px 48px;
+  background: var(--marble-white);
+  border-top: 1px solid var(--concrete);
+  border-bottom: 1px solid var(--concrete);
+}
+.process-header { margin-bottom: 80px; }
+.process-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-top: 12px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  position: relative;
+}
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: 32px; right: 32px;
+  height: 2px;
+  background: var(--concrete);
+  z-index: 0;
+}
+
+.step { padding: 0 32px 0 0; position: relative; }
+
+.step-dot {
+  width: 64px; height: 64px;
+  background: var(--white-pure);
+  border: 2px solid var(--concrete);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s;
+}
+.step:hover .step-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--white-pure);
+  box-shadow: 0 0 20px rgba(245,158,11,0.3);
+}
+
+.step-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-dark);
+}
+.step-desc {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  opacity: 0.7;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* ─── TESTIMONIALS ── */
+.testimonials {
+  padding: 120px 48px;
+  background: var(--white-pure);
+  position: relative;
+  overflow: hidden;
+}
+
+.t-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+}
+.t-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+.t-header h2 span { color: var(--gold); font-style: italic; }
+
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.testi-card {
+  background: var(--marble-white);
+  border: 1px solid var(--concrete);
+  border-radius: 16px;
+  padding: 40px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+.testi-card:hover {
+  border-color: rgba(245,158,11,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.03);
+}
+.testi-card::before {
+  content: '"';
+  position: absolute;
+  top: 20px; right: 28px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 6rem;
+  font-weight: 700;
+  color: rgba(245,158,11,0.15);
+  line-height: 1;
+}
+
+.testi-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+.testi-stars span {
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.testi-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  color: var(--text-dark);
+  opacity: 0.85;
+  line-height: 1.7;
+  font-weight: 300;
+  font-style: italic;
+  margin-bottom: 32px;
+}
+
+.testi-author { display: flex; align-items: center; gap: 16px; }
+.testi-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--concrete);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-dark);
+  flex-shrink: 0;
+  border: 1px solid var(--gold);
+}
+.testi-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+.testi-role {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+/* ─── CTA & FORM ── */
+.cta-section {
+  background: var(--white-pure);
+  padding: 0 48px 120px;
+}
+
+.cta-inner {
+  background: var(--text-dark);
+  border-radius: 24px;
+  padding: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(41, 37, 36, 0.15);
+}
+
+.cta-text h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 4.5vw, 4.2rem);
+  font-weight: 700;
+  color: var(--marble-white);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.cta-text h2 span { color: var(--gold); font-style: italic; }
+.cta-text p {
+  font-size: 1.1rem;
+  color: var(--concrete);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 420px;
+}
+
+.cta-bullets {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cta-bullet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: var(--marble-white);
+  font-weight: 300;
+}
+.cta-bullet::before {
+  content: '✓';
+  color: var(--sage-green);
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.cta-form { display: flex; flex-direction: column; gap: 16px; }
+
+.cta-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  color: var(--white-pure);
+  outline: none;
+  transition: all 0.3s;
+  width: 100%;
+}
+.cta-input::placeholder { color: rgba(255,255,255,0.4); }
+.cta-input:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.1);
+}
+
+.cta-btn {
+  background: var(--gold);
+  color: var(--white-pure);
+  border: none;
+  padding: 20px 32px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.cta-btn:hover {
+  background: var(--gold-d);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245,158,11,0.3);
+}
+.cta-guarantee {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  font-weight: 300;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* ─── WHATSAPP FLOAT ─── */
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--olive-green);
+  color: var(--white-pure);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(101, 163, 13, 0.3);
+  z-index: 99;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.whatsapp-float:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(101, 163, 13, 0.5);
+  color: var(--white-pure);
+}
+
+/* ─── FOOTER ── */
+footer {
+  background: var(--marble-white);
+  border-top: 1px solid var(--concrete);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-dark);
+}
+.footer-logo span { color: var(--gold); font-style: italic; }
+
+footer .f-copy {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  opacity: 0.6;
+  font-weight: 300;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  justify-content: flex-end;
+}
+.footer-links a {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+  opacity: 0.6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold); opacity: 1; }
+
+/* ─── ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 18px 24px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 40px; }
+  .hero-stats { display: none; }
+  .trust-bar { padding: 32px 24px; }
+  .philosophy { grid-template-columns: 1fr; padding: 80px 24px; gap: 30px; }
+  .philo-metrics { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .services { padding: 80px 24px; }
+  .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .services-header p { text-align: left; max-width: 100%; }
+  .services-grid { grid-template-columns: 1fr; gap: 16px;}
+  .svc-card { padding: 40px 28px; }
+  .process { padding: 80px 24px; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .steps::before { display: none; }
+  .testimonials { padding: 80px 24px; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .cta-section { padding: 0 24px 80px; }
+  .cta-inner { grid-template-columns: 1fr; padding: 48px 24px; gap: 40px; }
+  footer { grid-template-columns: 1fr; text-align: center; padding: 40px 24px; gap: 16px; }
+  .footer-links { justify-content: center; }
+  .whatsapp-float { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+  .whatsapp-float svg { width: 26px; height: 26px; }
+}
+
+@media (max-width: 480px) {
+  .philo-metrics { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .btn-primary, .btn-ghost { justify-content: center; }
+  .t-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav id="mainNav">
+  <div class="nav-logo">Mi<span>.</span>Agencia</div>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#testimonios">Proyectos</a></li>
+  </ul>
+  <a href="#contacto" class="nav-cta">Trabaja conmigo</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="hero-text reveal">
+    <div class="hero-eyebrow">Estratega Digital Especializado</div>
+    <h1>Convierto<br>tu web en una<br><em>máquina</em><br>de ventas</h1>
+    <p class="hero-body">Diseño ecosistemas digitales a medida: desde la primera impresión visual en redes hasta el correo automatizado que cierra la venta por ti.</p>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Ver disponibilidad <span>→</span></a>
+      <a href="#servicios" class="btn-ghost">Descubre cómo lo hago</a>
+    </div>
+  </div>
+
+  <div class="hero-stats reveal" style="transition-delay:0.25s">
+    <div class="stat-card-main">
+      <div class="big-num">3×</div>
+      <div class="big-label">Incremento medio en conversiones para los clientes que trabajan mano a mano conmigo.</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-mini">
+        <div class="num">+40</div>
+        <div class="lbl">Ecosistemas creados</div>
+      </div>
+      <div class="stat-mini">
+        <div class="num">100%</div>
+        <div class="lbl">Atención personal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">Embudos de venta</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Diseño web</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Email marketing</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Redes sociales</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Landing pages</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">SEO & SEM</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Estrategia digital</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Automatizaciones</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Embudos de venta</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Diseño web</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Email marketing</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Redes sociales</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Landing pages</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">SEO & SEM</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Estrategia digital</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Automatizaciones</span><span class="ticker-sep">·</span>
+  </div>
+</div>
+
+<div class="trust-bar">
+  <span class="trust-label">He desarrollado proyectos para</span>
+  <div class="trust-items">
+    <span class="trust-item">Empresas de Reformas</span>
+    <span class="trust-item">Arquitectura & Diseño</span>
+    <span class="trust-item">Inmobiliarias Premium</span>
+    <span class="trust-item">Consultores</span>
+    <span class="trust-item">Marcas Personales</span>
+  </div>
+</div>
+
+<section class="philosophy">
+  <div class="philo-label reveal">Mi Filosofía</div>
+  <div class="philo-text reveal" style="transition-delay:0.15s">
+    <h2>No hago webs simples.<br>Construyo <span>sistemas rentables.</span></h2>
+    <p>He aprendido que no basta con tener un perfil de Instagram bonito o una web que sirva como "tarjeta de visita". Como profesional independiente, me implico en tu negocio para crear una estrategia donde el diseño y los textos conviertan visitantes curiosos en clientes que confían en ti.</p>
+    <p>Tú eres experto en tu producto o servicio; yo construyo la infraestructura digital para que tu cliente ideal lo entienda, lo desee y lo compre de forma predecible.</p>
+    <div class="philo-metrics">
+      <div class="philo-metric">
+        <div class="m-val">1:1</div>
+        <div class="m-lbl">Trato directo y sin intermediarios</div>
+      </div>
+      <div class="philo-metric">
+        <div class="m-val">30d</div>
+        <div class="m-lbl">Del brief al ecosistema activo</div>
+      </div>
+      <div class="philo-metric">
+        <div class="m-val">ROI</div>
+        <div class="m-lbl">Enfoque absoluto en tu rentabilidad</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicios">
+  <div class="services-header reveal">
+    <div>
+      <span class="section-eyebrow">Mi Especialidad</span>
+      <h2>Lo que<br><em>construyo</em><br>para ti</h2>
+    </div>
+    <p>Me encargo de las piezas fundamentales para que domines tu sector en internet, para que tú solo tengas que preocuparte de atender a los clientes.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="svc-card reveal">
+      <div class="svc-num">01 / ESTRATEGIA</div>
+      <span class="svc-icon">⚡</span>
+      <div class="svc-title">Embudos de Venta</div>
+      <p class="svc-desc">Diseño recorridos estratégicos paso a paso para guiar a tu cliente desde el desconocimiento total hasta la decisión de compra, maximizando la conversión en cada clic.</p>
+      <span class="svc-tag">Arquitectura de negocio</span>
+    </div>
+
+    <div class="svc-card reveal" style="transition-delay:0.1s">
+      <div class="svc-num">02 / DESARROLLO</div>
+      <span class="svc-icon">💻</span>
+      <div class="svc-title">Webs y Landing Pages</div>
+      <p class="svc-desc">Desarrollo a medida páginas rápidas, elegantes y persuasivas. No uso plantillas genéricas; programo estructuras visuales pensadas exclusivamente para captar leads de calidad.</p>
+      <span class="svc-tag">Optimizadas para convertir</span>
+    </div>
+
+    <div class="svc-card reveal" style="transition-delay:0.15s">
+      <div class="svc-num">03 / IDENTIDAD</div>
+      <span class="svc-icon">📱</span>
+      <div class="svc-title">Branding y Redes</div>
+      <p class="svc-desc">Creo identidades gráficas magnéticas y coherentes. Genero piezas visuales que capturan la atención, demuestran tu autoridad y te posicionan como referente premium.</p>
+      <span class="svc-tag">Diseño de alto nivel</span>
+    </div>
+
+    <div class="svc-card reveal" style="transition-delay:0.2s">
+      <div class="svc-num">04 / AUTOMATIZACIÓN</div>
+      <span class="svc-icon">✉️</span>
+      <div class="svc-title">Sistemas de Email</div>
+      <p class="svc-desc">Escribo y configuro secuencias automáticas que nutren prospectos, agendan reuniones y venden mientras tú duermes. Tecnología trabajando a tu favor.</p>
+      <span class="svc-tag">Activo 24/7</span>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="proceso">
+  <div class="process-header reveal">
+    <span class="section-eyebrow">Método de trabajo</span>
+    <h2>Del primer café al resultado<br>en 4 pasos</h2>
+  </div>
+
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-dot">1</div>
+      <div class="step-title">Auditoría Inicial</div>
+      <p class="step-desc">Analizo tu negocio, tu competencia y tu público objetivo. Me siento contigo a entender exactamente qué quieres lograr y qué te frena actualmente.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:0.1s">
+      <div class="step-dot">2</div>
+      <div class="step-title">La Estrategia</div>
+      <p class="step-desc">Diseño un plan digital a tu medida. Nada de fórmulas copiadas. Defino el diseño, la tecnología y el mensaje exacto que tu cliente necesita escuchar.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:0.2s">
+      <div class="step-dot">3</div>
+      <div class="step-title">Desarrollo</div>
+      <p class="step-desc">Me encierro a construir. Diseño, redacto y programo todo tu ecosistema. Te presento avances continuos para asegurar que tu visión cobra vida a la perfección.</p>
+    </div>
+    <div class="step reveal" style="transition-delay:0.3s">
+      <div class="step-dot">4</div>
+      <div class="step-title">Lanzamiento</div>
+      <p class="step-desc">Publicamos, medimos y optimizamos. Te entrego un sistema funcionando y te acompaño en los primeros pasos para garantizar que la "máquina" arranca con fuerza.</p>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonios">
+  <div class="t-header reveal">
+    <div>
+      <span class="section-eyebrow">Casos de Éxito</span>
+      <h2>Lo que dicen<br>mis <span>clientes</span></h2>
+    </div>
+  </div>
+
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">Trabajar directamente con él fue un acierto. Entendió nuestra marca de reformas premium al instante y la landing page que desarrolló nos está trayendo presupuestos cualificados cada semana.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">JM</div>
+        <div>
+          <div class="testi-name">Jose María</div>
+          <div class="testi-role">Gerente · Grupo Chelonia</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card reveal" style="transition-delay:0.1s">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">Buscaba a alguien que no solo me hiciera "una web bonita", sino que entendiera de negocio. El embudo superó mis expectativas y el trato personal es inmejorable.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">CR</div>
+        <div>
+          <div class="testi-name">Carlos Ruiz</div>
+          <div class="testi-role">CEO · Inmobiliaria Prime</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card reveal" style="transition-delay:0.2s">
+      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p class="testi-text">La tranquilidad de saber que él se encarga de todo lo técnico y visual me ha permitido centrarme en mis clientes. Un profesional brillante y súper resolutivo.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">AL</div>
+        <div>
+          <div class="testi-name">Ana López</div>
+          <div class="testi-role">Consultora de Negocios</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contacto">
+  <div class="cta-inner">
+    <div class="cta-text reveal">
+      <h2>¿Hablamos de tu <span>proyecto?</span></h2>
+      <p>Cuéntame tu idea o el reto actual de tu negocio. Si veo que puedo ayudarte a escalar, agendamos una videollamada de 30 minutos totalmente gratis para trazar un plan.</p>
+      <div class="cta-bullets">
+        <span class="cta-bullet">Trato 100% directo y personal</span>
+        <span class="cta-bullet">Identifico tus puntos débiles actuales</span>
+        <span class="cta-bullet">Te propongo soluciones reales y ejecutables</span>
+        <span class="cta-bullet">Te respondo en menos de 24 horas</span>
+      </div>
+    </div>
+
+    <form class="cta-form reveal" id="contactForm" style="transition-delay:0.2s">
+      <input class="cta-input" id="name" name="name" type="text" placeholder="Tu nombre" required autocomplete="name">
+      <input class="cta-input" id="email" name="email" type="email" placeholder="Tu email" required autocomplete="email">
+      <input class="cta-input" id="biz" name="negocio" type="text" placeholder="¿Cuál es tu empresa o sector?" required>
+      <input class="cta-input" id="reto" name="reto" type="text" placeholder="¿En qué te puedo ayudar?" required>
+      <button class="cta-btn" type="submit" id="submitBtn">
+        📩 Solicitar Asesoría
+      </button>
+      <p class="cta-guarantee">Sin compromiso · Trato directo · 100% confidencial</p>
+    </form>
+  </div>
+</section>
+
+<a href="https://wa.me/34635558042" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+  </svg>
+</a>
+
+<footer>
+  <div class="footer-logo">Mi<span>.</span>Agencia</div>
+  <p class="f-copy">© 2026 · Construyendo activos digitales de alto rendimiento</p>
+  <nav class="footer-links">
+    <a href="#servicios">Especialidad</a>
+    <a href="#proceso">Método</a>
+    <a href="#contacto">Hablemos</a>
+  </nav>
+</footer>
+
+<script>
+  // ── Cursor glow
+  const glow = document.getElementById('cursorGlow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top  = e.clientY + 'px';
+  });
+
+  // ── Nav shrink on scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // ── Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Animate counters
+  function animateCounter(el, target, suffix) {
+    let start = 0;
+    const duration = 1600;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const p = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = (suffix === '%' || suffix === '×')
+        ? Math.round(ease * target) + suffix
+        : '+' + Math.round(ease * target);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const num = e.target.querySelector('.num, .big-num, .m-val');
+        if (num) {
+          const txt = num.textContent.trim();
+          if (txt === '3×' || txt === '0×') { num.textContent = '0×'; animateCounter(num, 3, '×'); }
+          else if (txt === '+40' || txt === '+0') { num.textContent = '+0'; animateCounter(num, 40, ''); }
+          else if (txt === '100%' || txt === '0%') { num.textContent = '0%'; animateCounter(num, 100, '%'); }
+        }
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-card-main, .stat-mini, .philo-metric').forEach(el => counterObs.observe(el));
+
+  // ── FORMSPREE: Envío invisible sin salir de la página
+  const contactForm = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault(); // Evita que la página recargue o cambie de URL
+    
+    // Cambiamos el botón a estado "Enviando..."
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Enviando...';
+    submitBtn.disabled = true;
+
+    try {
+      const response = await fetch("https://formspree.io/f/xojnoepe", {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        submitBtn.innerHTML = '✅ ¡Recibido! Hablamos pronto';
+        submitBtn.style.background = 'var(--olive-green)';
+        contactForm.reset(); // Limpia el formulario
+      } else {
+        submitBtn.innerHTML = '⚠ Hubo un error. Intenta de nuevo.';
+        submitBtn.style.background = '#ef4444';
+        setTimeout(() => {
+          submitBtn.innerHTML = originalText;
+          submitBtn.style.background = '';
+          submitBtn.disabled = false;
+        }, 3000);
+      }
+    } catch (error) {
+      submitBtn.innerHTML = '⚠ Error de conexión';
+      submitBtn.style.background = '#ef4444';
+      setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.style.background = '';
+        submitBtn.disabled = false;
+      }, 3000);
+    }
+  });
+</script>
+</body>
+</html>
