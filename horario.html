@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turno Nocturno Zara - La Zenia</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --marble-white: #fafaf9;
+            --concrete: #e7e5e4;
+            --gold: #f59e0b;
+            --sage-green: #84cc16;
+            --text-dark: #292524;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--marble-white);
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            display: flex; justify-content: center;
+        }
+
+        .app-container {
+            width: 100%; max-width: 420px; background-color: #ffffff;
+            min-height: 100vh; position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding-bottom: 80px;
+        }
+
+        /* ESTILOS DE LOGIN */
+        .login-container {
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; min-height: 100vh; padding: 30px;
+            box-sizing: border-box; text-align: center;
+            background-color: var(--marble-white);
+        }
+        .login-box {
+            background: white; padding: 30px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%;
+            border: 1px solid var(--concrete);
+        }
+        .login-logo { font-size: 2rem; margin-bottom: 10px; }
+        .login-input {
+            width: 100%; padding: 14px; margin-bottom: 15px;
+            border: 1px solid var(--concrete); border-radius: 8px;
+            box-sizing: border-box; background-color: var(--marble-white);
+        }
+        #login-error { color: #dc2626; font-size: 0.9rem; margin-bottom: 15px; display: none; }
+
+        .header {
+            padding: 20px; text-align: center; border-bottom: 1px solid var(--concrete);
+            font-size: 1.25rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn-logout { background: none; border: none; color: #a8a29e; font-size: 0.9rem; cursor: pointer; text-decoration: underline; }
+
+        .content { padding: 20px; }
+        .form-group { margin-bottom: 24px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; }
+
+        input[type="date"], input[type="time"] {
+            width: 100%; padding: 12px; border: 1px solid var(--concrete);
+            border-radius: 8px; box-sizing: border-box;
+            background-color: var(--marble-white); color: var(--text-dark); font-family: inherit;
+        }
+
+        .member-card {
+            border: 1px solid var(--concrete); border-radius: 8px;
+            padding: 12px; margin-bottom: 10px; background-color: #ffffff; transition: border-color 0.2s;
+        }
+        .member-card.active { border-color: var(--sage-green); background-color: var(--marble-white); }
+        .member-card.jefe { border-left: 4px solid var(--gold); }
+        .member-header { display: flex; align-items: center; gap: 12px; }
+        .member-header label { margin-bottom: 0; flex-grow: 1; cursor: pointer; font-weight: normal; }
+        .duracion-badge { font-size: 0.85rem; color: var(--sage-green); font-weight: bold; display: none; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sage-green); cursor: pointer; }
+
+        .member-times {
+            display: none; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--concrete);
+        }
+        .member-times.show { display: flex; }
+        .time-col { flex: 1; }
+        .time-col span { display: block; font-size: 0.75rem; color: #78716c; margin-bottom: 4px; }
+
+        .btn-primary {
+            width: 100%; padding: 16px; background-color: var(--gold);
+            color: #ffffff; border: none; border-radius: 8px; font-size: 1rem;
+            font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+        .btn-secondary { background-color: var(--concrete); color: var(--text-dark); margin-top: 0; }
+
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 420px;
+            display: flex; background-color: #ffffff; border-top: 1px solid var(--concrete); z-index: 10;
+        }
+        .nav-item { flex: 1; padding: 16px; text-align: center; font-weight: 600; color: #a8a29e; cursor: pointer; }
+        .nav-item.active { color: var(--gold); border-top: 3px solid var(--gold); margin-top: -1px; }
+
+        #mensaje-exito {
+            display: none; background-color: var(--sage-green); color: white;
+            padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-weight: bold;
+        }
+
+        .tienda-info { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed var(--concrete); }
+        .tienda-info h2 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--text-dark); }
+        .tienda-info p { margin: 0; color: #78716c; font-size: 0.9rem; line-height: 1.4; }
+
+        .reporte-card { border: 1px solid var(--concrete); border-radius: 8px; padding: 16px; margin-bottom: 16px; background-color: var(--marble-white); text-align: center; }
+        .reporte-card.totales { text-align: left; padding: 0; border: none; background: none; }
+        
+        .empleado-reporte { border: 1px solid var(--concrete); border-radius: 8px; margin-bottom: 15px; overflow: hidden; background-color: #ffffff; }
+        .empleado-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--marble-white); border-bottom: 2px solid var(--concrete); }
+        .empleado-detalle { padding: 8px 16px; }
+        .detalle-item { display: flex; justify-content: space-between; font-size: 0.9rem; color: #57534e; padding: 8px 0; border-bottom: 1px dashed var(--concrete); }
+        .detalle-item:last-child { border-bottom: none; }
+        .reporte-horas { font-weight: bold; color: var(--sage-green); font-size: 1.1rem;}
+
+        .hidden { display: none !important; }
+
+        @media print {
+            .nav-bar, .btn-primary, .btn-secondary, #mensaje-exito, .btn-logout { display: none !important; }
+            .app-container { box-shadow: none; max-width: 100%; padding-bottom: 0; }
+            body { background-color: white; }
+            .reporte-card { border: 2px solid var(--text-dark); }
+            .empleado-reporte { border: 2px solid var(--text-dark); page-break-inside: avoid; }
+            .tienda-info { border-bottom: 2px solid var(--text-dark); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="pantalla-login" class="login-container">
+    <div class="login-box">
+        <div class="login-logo">🌙</div>
+        <h2 style="margin-top: 0;">Acceso Supervisor</h2>
+        <p style="color: #78716c; font-size: 0.9rem; margin-bottom: 20px;">Turno Nocturno Zara - La Zenia</p>
+        
+        <div id="login-error">Credenciales incorrectas.</div>
+        
+        <input type="email" id="email" class="login-input" placeholder="Correo electrónico">
+        <input type="password" id="password" class="login-input" placeholder="Contraseña">
+        
+        <button id="btn-login" class="btn-primary" onclick="iniciarSesion()">Entrar</button>
+    </div>
+</div>
+
+<div id="pantalla-app" class="app-container hidden">
+    
+    <div id="view-registro">
+        <div class="header">
+            <span>Control de Turnos</span>
+            <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+        </div>
+        <div class="content">
+            <div id="mensaje-exito">¡Jornada registrada correctamente!</div>
+
+            <div class="form-group">
+                <label>Fecha de la jornada</label>
+                <input type="date" id="fecha-turno">
+            </div>
+
+            <div class="form-group">
+                <label>Equipo Presente</label>
+                <div id="lista-empleados"></div>
+            </div>
+
+            <button id="btn-guardar" class="btn-primary" onclick="guardarEnSupabase()">Registrar Jornada</button>
+        </div>
+    </div>
+
+    <div id="view-reportes" class="hidden">
+        <div class="header">
+            <span>Reporte para Supervisor</span>
+            <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+        </div>
+        <div class="content">
+            <div class="tienda-info">
+                <h2>Turno Nocturno Zara</h2>
+                <p>La Zenia, Orihuela Costa 03189<br>Alicante, España</p>
+            </div>
+
+            <div class="reporte-card">
+                <label style="margin-bottom: 5px;">Periodo de Corte</label>
+                <strong id="texto-periodo" style="font-size: 1.1rem;">Calculando...</strong>
+            </div>
+
+            <div class="reporte-card totales">
+                <div id="lista-totales">
+                    <p style="text-align: center; color: #78716c; padding: 20px; border: 1px solid var(--concrete); border-radius: 8px; background-color: var(--marble-white);">
+                        Pulsa el botón de abajo para extraer y desglosar las jornadas.
+                    </p>
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="generarReporte()" style="margin-bottom: 15px;">Generar Desglose de Horas</button>
+            <button class="btn-primary btn-secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+        </div>
+    </div>
+    
+    <div class="nav-bar">
+        <div class="nav-item active" id="tab-registro" onclick="cambiarPestana('registro')">Registro</div>
+        <div class="nav-item" id="tab-reportes" onclick="cambiarPestana('reportes')">Reportes</div>
+    </div>
+</div>
+
+<script>
+    // --- CONEXIÓN A SUPABASE ---
+    const SUPABASE_URL = 'https://ulgzpjvpmamecsbyyldn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_MWP2a1Kh65mYHCn5C1KWOA_Y4R5Eo7V';
+    const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // --- SISTEMA DE LOGIN ---
+    async function verificarSesion() {
+        const { data: { session } } = await clienteSupabase.auth.getSession();
+        if (session) {
+            document.getElementById('pantalla-login').classList.add('hidden');
+            document.getElementById('pantalla-app').classList.remove('hidden');
+        } else {
+            document.getElementById('pantalla-login').classList.remove('hidden');
+            document.getElementById('pantalla-app').classList.add('hidden');
+        }
+    }
+
+    async function iniciarSesion() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const btnLogin = document.getElementById('btn-login');
+        const errorMsg = document.getElementById('login-error');
+
+        if (!email || !password) {
+            errorMsg.innerText = "Completa los campos.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        btnLogin.innerText = "Entrando...";
+        errorMsg.style.display = 'none';
+
+        const { data, error } = await clienteSupabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            errorMsg.innerText = "Credenciales incorrectas.";
+            errorMsg.style.display = 'block';
+            btnLogin.innerText = "Entrar";
+        } else {
+            // Login exitoso
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            btnLogin.innerText = "Entrar";
+            verificarSesion(); // Cambia la pantalla
+        }
+    }
+
+    async function cerrarSesion() {
+        await clienteSupabase.auth.signOut();
+        verificarSesion();
+        // Resetear la pestaña visualmente al salir
+        cambiarPestana('registro');
+        document.getElementById('lista-totales').innerHTML = `<p style="text-align: center; color: #78716c; padding: 20px; border: 1px solid var(--concrete); border-radius: 8px; background-color: var(--marble-white);">Pulsa el botón de abajo para extraer y desglosar las jornadas.</p>`;
+    }
+
+    // Comprobar si ya estábamos logueados al abrir el archivo
+    verificarSesion();
+
+
+    // --- LÓGICA DE INTERFAZ (RESTO DE LA APP) ---
+    const hoy = new Date().toLocaleDateString('en-CA'); 
+    document.getElementById('fecha-turno').value = hoy;
+
+    const EMPLEADOS = [
+        { id: 'carlos', nombre: 'Carlos Castillo', jefe: true },
+        { id: 'alejandro', nombre: 'Alejandro Martinez' },
+        { id: 'jorge', nombre: 'Jorge Gonzalez' },
+        { id: 'ana', nombre: 'Ana Kaifer' },
+        { id: 'francisco', nombre: 'Francisco Garcia' },
+        { id: 'javier', nombre: 'Javier Diaz' }
+    ];
+
+    const contenedorLista = document.getElementById('lista-empleados');
+    EMPLEADOS.forEach(emp => {
+        const claseJefe = emp.jefe ? 'jefe' : '';
+        const etiquetaNombre = emp.jefe ? `<strong>${emp.nombre}</strong> (Jefe)` : emp.nombre;
+        const html = `
+            <div class="member-card ${claseJefe}" id="card-${emp.id}">
+                <div class="member-header">
+                    <input type="checkbox" id="chk-${emp.id}" data-nombre="${emp.nombre}" onchange="toggleTimes('${emp.id}')">
+                    <label for="chk-${emp.id}">${etiquetaNombre}</label>
+                    <span class="duracion-badge" id="duracion-${emp.id}"></span>
+                </div>
+                <div class="member-times" id="times-${emp.id}">
+                    <div class="time-col">
+                        <span>Entrada</span>
+                        <input type="time" id="in-${emp.id}" value="22:30" onchange="calcularHoras('${emp.id}')">
+                    </div>
+                    <div class="time-col">
+                        <span>Salida</span>
+                        <input type="time" id="out-${emp.id}" value="03:30" onchange="calcularHoras('${emp.id}')">
+                    </div>
+                </div>
+            </div>`;
+        contenedorLista.insertAdjacentHTML('beforeend', html);
+    });
+
+    function calcularHoras(id) {
+        const inVal = document.getElementById('in-' + id).value;
+        const outVal = document.getElementById('out-' + id).value;
+        if(!inVal || !outVal) return;
+
+        let [hIn, mIn] = inVal.split(':').map(Number);
+        let [hOut, mOut] = outVal.split(':').map(Number);
+
+        let minEntrada = (hIn * 60) + mIn;
+        let minSalida = (hOut * 60) + mOut;
+
+        if (minSalida <= minEntrada) minSalida += 24 * 60; 
+
+        let diffTotal = minSalida - minEntrada;
+        let horasTrabajadas = Math.floor(diffTotal / 60);
+        let minutosTrabajados = diffTotal % 60;
+
+        const badge = document.getElementById('duracion-' + id);
+        badge.innerText = minutosTrabajados > 0 ? `${horasTrabajadas}h ${minutosTrabajados}m` : `${horasTrabajadas}h`;
+    }
+
+    function toggleTimes(id) {
+        const checkbox = document.getElementById('chk-' + id);
+        const timesDiv = document.getElementById('times-' + id);
+        const cardDiv = document.getElementById('card-' + id);
+        const badge = document.getElementById('duracion-' + id);
+
+        if (checkbox.checked) {
+            timesDiv.classList.add('show'); cardDiv.classList.add('active'); badge.style.display = 'block'; calcularHoras(id); 
+        } else {
+            timesDiv.classList.remove('show'); cardDiv.classList.remove('active'); badge.style.display = 'none';
+        }
+    }
+
+    function cambiarPestana(pestana) {
+        document.getElementById('view-registro').classList.add('hidden');
+        document.getElementById('view-reportes').classList.add('hidden');
+        document.getElementById('tab-registro').classList.remove('active');
+        document.getElementById('tab-reportes').classList.remove('active');
+
+        document.getElementById('view-' + pestana).classList.remove('hidden');
+        document.getElementById('tab-' + pestana).classList.add('active');
+        
+        if(pestana === 'reportes') calcularFechasPeriodo(); 
+    }
+
+    // --- GUARDAR DATOS ---
+    async function guardarEnSupabase() {
+        const btnGuardar = document.getElementById('btn-guardar');
+        const fecha = document.getElementById('fecha-turno').value;
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let registros = [];
+
+        for (let chk of checkboxes) {
+            if (chk.checked) {
+                const id = chk.id.split('-')[1]; 
+                const nombre = chk.getAttribute('data-nombre');
+                const horaEntrada = document.getElementById('in-' + id).value;
+                const horaSalida = document.getElementById('out-' + id).value;
+
+                if (!horaEntrada || !horaSalida) {
+                    alert(`Por favor, completa los horarios para ${nombre}`); return; 
+                }
+                registros.push({ Fecha: fecha, Empleado: nombre, hora_entradas: horaEntrada, hora_salida: horaSalida });
+            }
+        }
+
+        if (registros.length === 0) { alert("Selecciona al menos un miembro."); return; }
+
+        btnGuardar.innerText = "Guardando..."; btnGuardar.disabled = true;
+
+        try {
+            const { error } = await clienteSupabase.from('Horarios').insert(registros);
+            if (error) throw error;
+
+            const msjExito = document.getElementById('mensaje-exito');
+            msjExito.style.display = 'block'; msjExito.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => { msjExito.style.display = 'none'; }, 4000);
+            
+            checkboxes.forEach(chk => { chk.checked = false; toggleTimes(chk.id.split('-')[1]); });
+        } catch (err) { alert("Error al guardar: Asegúrate de haber iniciado sesión y configurado las políticas RLS."); } 
+        finally { btnGuardar.innerText = "Registrar Jornada"; btnGuardar.disabled = false; }
+    }
+
+    // --- LÓGICA DE REPORTES ---
+    let fechaInicioGlobal, fechaFinGlobal; 
+
+    function calcularFechasPeriodo() {
+        const hoyDate = new Date();
+        let anio = hoyDate.getFullYear();
+        let mes = hoyDate.getMonth(); 
+        let dia = hoyDate.getDate();
+
+        let mesInicio, mesFin, anioInicio, anioFin;
+
+        if (dia >= 25) {
+            mesInicio = mes; anioInicio = anio; mesFin = mes + 1; anioFin = anio;
+            if (mesFin > 11) { mesFin = 0; anioFin++; }
+        } else {
+            mesInicio = mes - 1; anioInicio = anio; mesFin = mes; anioFin = anio;
+            if (mesInicio < 0) { mesInicio = 11; anioInicio--; }
+        }
+
+        const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        document.getElementById('texto-periodo').innerText = `25 ${nombresMeses[mesInicio]} - 24 ${nombresMeses[mesFin]} ${anioFin}`;
+        fechaInicioGlobal = `${anioInicio}-${String(mesInicio + 1).padStart(2, '0')}-25`;
+        fechaFinGlobal = `${anioFin}-${String(mesFin + 1).padStart(2, '0')}-24`;
+    }
+
+    async function generarReporte() {
+        const contenedorTotales = document.getElementById('lista-totales');
+        contenedorTotales.innerHTML = `<p style="text-align: center;">Descargando jornadas desde la base de datos...</p>`;
+
+        try {
+            const { data, error } = await clienteSupabase
+                .from('Horarios')
+                .select('*')
+                .gte('Fecha', fechaInicioGlobal)
+                .lte('Fecha', fechaFinGlobal)
+                .order('Fecha', { ascending: true });
+
+            if (error) throw error;
+
+            if (data.length === 0) {
+                contenedorTotales.innerHTML = `<p style="text-align: center; color: #f59e0b; padding: 20px; border: 1px solid var(--concrete); border-radius: 8px; background-color: var(--marble-white);">No hay turnos registrados en este periodo.</p>`;
+                return;
+            }
+
+            let datosPorEmpleado = {};
+
+            data.forEach(turno => {
+                const emp = turno.Empleado; const fechaTurno = turno.Fecha;
+                let [hIn, mIn] = turno.hora_entradas.split(':').map(Number);
+                let [hOut, mOut] = turno.hora_salida.split(':').map(Number);
+                let minEntrada = (hIn * 60) + mIn; let minSalida = (hOut * 60) + mOut;
+
+                if (minSalida <= minEntrada) minSalida += 24 * 60; 
+                let minutosTurno = minSalida - minEntrada;
+
+                if (!datosPorEmpleado[emp]) { datosPorEmpleado[emp] = { totalMinutos: 0, jornadas: [] }; }
+                datosPorEmpleado[emp].totalMinutos += minutosTurno;
+
+                let [yyyy, mm, dd] = fechaTurno.split('-');
+                let fechaBonita = `${dd}/${mm}/${yyyy}`;
+                datosPorEmpleado[emp].jornadas.push({ fecha: fechaBonita, minutos: minutosTurno });
+            });
+
+            contenedorTotales.innerHTML = '';
+            
+            for (const [nombre, datos] of Object.entries(datosPorEmpleado)) {
+                let horasTotales = Math.floor(datos.totalMinutos / 60);
+                let minsTotales = datos.totalMinutos % 60;
+                let textoHorasTotales = minsTotales > 0 ? `${horasTotales}h ${minsTotales}m` : `${horasTotales}h 00m`;
+
+                let jornadasHtml = datos.jornadas.map(j => {
+                    let h = Math.floor(j.minutos / 60); let m = j.minutos % 60;
+                    let txt = m > 0 ? `${h}h ${m}m` : `${h}h 00m`;
+                    return `<div class="detalle-item"><span>🗓️ ${j.fecha}</span><span>${txt}</span></div>`;
+                }).join('');
+
+                contenedorTotales.innerHTML += `
+                    <div class="empleado-reporte">
+                        <div class="empleado-header">
+                            <strong style="color: var(--text-dark); font-size: 1.05rem;">${nombre}</strong>
+                            <span class="reporte-horas">${textoHorasTotales}</span>
+                        </div>
+                        <div class="empleado-detalle">${jornadasHtml}</div>
+                    </div>
+                `;
+            }
+        } catch (err) { contenedorTotales.innerHTML = `<p style="color: red; text-align: center;">Error de lectura. Comprueba tu inicio de sesión.</p>`; }
+    }
+    
+    calcularFechasPeriodo();
+</script>
+
+</body>
+</html>
