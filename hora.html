@@ -9,27 +9,34 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta de colores oficial */
+            /* Paleta de colores principal */
             --marble-white: #fafaf9;
             --concrete: #e7e5e4;
             --gold: #f59e0b;
             --sage-green: #84cc16;
             --text-dark: #292524;
-            
-            /* Colores de apoyo */
-            --surface: #ffffff;
-            --red: #dc2626;
-            --muted: #78716c;
-            --serif: 'DM Serif Display', Georgia, serif;
-            --sans: 'DM Sans', system-ui, sans-serif;
+
+            /* Mapeo de variables de estructura */
+            --bg:        var(--marble-white);
+            --surface:   #ffffff;
+            --surface2:  var(--marble-white);
+            --border:    var(--concrete);
+            --border2:   var(--concrete);
+            --gold-light:#fbbf24;
+            --green:     var(--sage-green);
+            --red:       #dc2626;
+            --text:      var(--text-dark);
+            --muted:     #78716c;
+            --serif:     'DM Serif Display', Georgia, serif;
+            --sans:      'DM Sans', system-ui, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--sans);
-            background-color: var(--marble-white);
-            color: var(--text-dark);
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -50,8 +57,8 @@
             position: relative;
             z-index: 1;
             padding-bottom: 80px;
-            border-left: 1px solid var(--concrete);
-            border-right: 1px solid var(--concrete);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
         }
 
         /* ── LOGIN ── */
@@ -59,7 +66,7 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             min-height: 100vh; padding: 32px;
-            background: var(--marble-white);
+            background: var(--bg);
             position: relative; overflow: hidden;
             width: 100%;
         }
@@ -77,7 +84,7 @@
             background: var(--surface);
             padding: 40px 36px;
             border-radius: 20px;
-            border: 1px solid var(--concrete);
+            border: 1px solid var(--border2);
             width: 100%;
             position: relative;
             animation: fadeUp 0.6s ease both;
@@ -100,7 +107,7 @@
             font-family: var(--serif);
             font-size: 1.7rem;
             text-align: center;
-            color: var(--text-dark);
+            color: var(--text);
             margin-bottom: 4px;
         }
         .login-sub {
@@ -115,10 +122,10 @@
             width: 100%;
             padding: 14px 16px;
             margin-bottom: 12px;
-            background: var(--marble-white);
-            border: 1px solid var(--concrete);
+            background: var(--bg);
+            border: 1px solid var(--border2);
             border-radius: 10px;
-            color: var(--text-dark);
+            color: var(--text);
             font-family: var(--sans);
             font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -144,7 +151,7 @@
         /* ── HEADER ── */
         .header {
             padding: 18px 20px;
-            border-bottom: 1px solid var(--concrete);
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -156,7 +163,7 @@
         .header-title {
             font-family: var(--serif);
             font-size: 1.1rem;
-            color: var(--text-dark);
+            color: var(--text);
             letter-spacing: 0.01em;
         }
         .btn-logout {
@@ -166,7 +173,7 @@
             letter-spacing: 0.04em;
             transition: color 0.2s;
         }
-        .btn-logout:hover { color: var(--text-dark); }
+        .btn-logout:hover { color: var(--text); }
 
         /* ── CONTENT ── */
         .content { padding: 24px 20px; }
@@ -185,10 +192,10 @@
         input[type="date"], input[type="time"] {
             width: 100%;
             padding: 12px 14px;
-            background: var(--marble-white);
-            border: 1px solid var(--concrete);
+            background: var(--bg);
+            border: 1px solid var(--border2);
             border-radius: 10px;
-            color: var(--text-dark);
+            color: var(--text);
             font-family: var(--sans);
             font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -206,8 +213,8 @@
 
         /* ── CARDS DE EMPLEADOS ── */
         .member-card {
-            background: var(--marble-white);
-            border: 1px solid var(--concrete);
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 8px;
@@ -233,13 +240,13 @@
         .member-header label {
             margin-bottom: 0; flex-grow: 1;
             cursor: pointer; font-weight: 400;
-            font-size: 0.95rem; color: var(--text-dark);
+            font-size: 0.95rem; color: var(--text);
             text-transform: none; letter-spacing: 0;
         }
 
         .duracion-badge {
             font-size: 0.75rem;
-            color: var(--sage-green);
+            color: var(--green);
             font-weight: 600;
             display: none;
             white-space: nowrap;
@@ -250,14 +257,14 @@
 
         input[type="checkbox"] {
             width: 18px; height: 18px;
-            accent-color: var(--sage-green);
+            accent-color: var(--green);
             cursor: pointer; flex-shrink: 0;
         }
 
         .member-times {
             display: none; gap: 12px;
             margin-top: 14px; padding-top: 14px;
-            border-top: 1px dashed var(--concrete);
+            border-top: 1px dashed var(--border2);
         }
         .member-times.show { display: flex; }
         .time-col { flex: 1; }
@@ -291,14 +298,14 @@
         .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
 
         .btn-secondary {
-            background: var(--marble-white);
-            color: var(--text-dark);
-            border: 1px solid var(--concrete);
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border2);
             box-shadow: none;
             margin-top: 10px;
         }
         .btn-secondary:hover:not(:disabled) {
-            background: var(--concrete);
+            background: var(--border2);
             box-shadow: none;
             transform: none;
         }
@@ -310,7 +317,7 @@
             display: flex;
             background: rgba(255,255,255,0.96);
             backdrop-filter: blur(12px);
-            border-top: 1px solid var(--concrete);
+            border-top: 1px solid var(--border);
             z-index: 10;
         }
         .nav-item {
@@ -335,8 +342,8 @@
         }
         .mensaje.exito {
             background: rgba(132,204,22,0.1);
-            color: var(--sage-green);
-            border: 1px solid rgba(132,204,22,0.3);
+            color: var(--green);
+            border: 1px solid rgba(132,204,22,0.2);
         }
         .mensaje.error {
             background: rgba(248,113,113,0.1);
@@ -348,27 +355,25 @@
         .tienda-info {
             text-align: center; margin-bottom: 24px;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--concrete);
+            border-bottom: 1px solid var(--border);
         }
-        
         .reporte-banner-img {
             width: 100%;
             max-width: 280px;
             border-radius: 8px;
             margin-bottom: 15px;
         }
-        
         .tienda-info h2 {
             font-family: var(--serif);
             font-size: 1.4rem;
-            color: var(--text-dark);
+            color: var(--text);
             margin-bottom: 6px;
         }
         .tienda-info p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
 
         .periodo-card {
-            background: var(--marble-white);
-            border: 1px solid var(--concrete);
+            background: var(--bg);
+            border: 1px solid var(--border2);
             border-radius: 12px;
             padding: 16px 20px;
             margin-bottom: 20px;
@@ -391,33 +396,33 @@
             text-align: center; color: var(--muted);
             padding: 10px 14px; font-size: 0.82rem;
             margin-bottom: 16px;
-            background: var(--marble-white);
+            background: var(--bg);
             border-radius: 8px;
-            border: 1px solid var(--concrete);
+            border: 1px solid var(--border);
             letter-spacing: 0.02em;
         }
 
         .empleado-reporte {
-            border: 1px solid var(--concrete);
+            border: 1px solid var(--border);
             border-radius: 12px;
             margin-bottom: 12px;
             overflow: hidden;
-            background: var(--marble-white);
+            background: var(--bg);
             transition: border-color 0.2s;
         }
-        .empleado-reporte:hover { border-color: var(--concrete); }
+        .empleado-reporte:hover { border-color: var(--border2); }
 
         .empleado-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 14px 18px;
-            border-bottom: 1px solid var(--concrete);
-            background: var(--marble-white);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
         }
         .empleado-nombre {
-            font-weight: 500; color: var(--text-dark); font-size: 0.95rem;
+            font-weight: 500; color: var(--text); font-size: 0.95rem;
         }
         .reporte-horas {
-            font-weight: 600; color: var(--sage-green);
+            font-weight: 600; color: var(--green);
             font-size: 1rem;
             background: rgba(132,204,22,0.15);
             padding: 4px 10px; border-radius: 20px;
@@ -428,7 +433,7 @@
             display: flex; justify-content: space-between;
             font-size: 0.87rem; color: var(--muted);
             padding: 9px 18px;
-            border-bottom: 1px solid var(--concrete);
+            border-bottom: 1px solid var(--border);
             transition: background 0.15s;
         }
         .detalle-item:last-child { border-bottom: none; }
@@ -456,9 +461,9 @@
             body { background: white; color: #111; }
             .nav-bar, .btn-primary, .btn-secondary, .mensaje, .btn-logout { display: none !important; }
             .app-container { box-shadow: none; max-width: 100%; padding-bottom: 0; background: white; border: none; }
-            .header { position: static; background: white; border-bottom: 2px solid #111; display: none; }
+            .header { display: none !important; }
             .empleado-reporte { border: 2px solid #ccc; page-break-inside: avoid; background: white; }
-            :root { --text-dark: #111; --muted: #555; --marble-white: #f9f9f9; --concrete: #ddd; }
+            :root { --text: #111; --muted: #555; --bg: #f9f9f9; --border: #ddd; }
         }
 
         /* ── STAGGERED ENTRANCE ── */
@@ -535,7 +540,7 @@
 
             <div id="lista-totales">
                 <p style="text-align:center; color:var(--muted); padding:24px;
-                   border:1px dashed var(--concrete); border-radius:12px;">
+                   border:1px dashed var(--border); border-radius:12px;">
                     Pulsa el botón para generar el desglose de horas.
                 </p>
             </div>
@@ -555,20 +560,22 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ─── CONFIGURACIÓN ────────────────────────────────────────────
+// ─── CONFIGURACIÓN INMEDIATA ──────────────────────────────────
+// Conectamos a Supabase directamente, sin esperar al banner de imagen.
 const SUPABASE_URL = 'https://ulgzpjvpmamecsbyyldn.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MWP2a1Kh65mYHCn5C1KWOA_Y4R5Eo7V';
-let clienteSupabase;
+const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-window.addEventListener('load', () => {
-    clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Usamos DOMContentLoaded en vez de 'load'. DOMContentLoaded se ejecuta apenas lee el HTML, sin esperar las fotos.
+document.addEventListener('DOMContentLoaded', () => {
     verificarSesion();
     renderEmpleados();
     document.getElementById('fecha-turno').value = new Date().toLocaleDateString('en-CA');
     calcularFechasPeriodo();
     
-    // Detectar automáticamente si la sesión caduca
+    // Detectar si la sesión caduca
     clienteSupabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT' || !session) {
             document.getElementById('pantalla-login').classList.remove('hidden');
@@ -589,13 +596,17 @@ const EMPLEADOS = [
 
 // ─── AUTH ─────────────────────────────────────────────────────
 async function verificarSesion() {
-    const { data: { session } } = await clienteSupabase.auth.getSession();
-    if (session) {
-        document.getElementById('pantalla-login').classList.add('hidden');
-        document.getElementById('pantalla-app').classList.remove('hidden');
-    } else {
-        document.getElementById('pantalla-login').classList.remove('hidden');
-        document.getElementById('pantalla-app').classList.add('hidden');
+    try {
+        const { data: { session } } = await clienteSupabase.auth.getSession();
+        if (session) {
+            document.getElementById('pantalla-login').classList.add('hidden');
+            document.getElementById('pantalla-app').classList.remove('hidden');
+        } else {
+            document.getElementById('pantalla-login').classList.remove('hidden');
+            document.getElementById('pantalla-app').classList.add('hidden');
+        }
+    } catch (err) {
+        console.error("Error verificando sesión:", err);
     }
 }
 
@@ -609,29 +620,36 @@ async function iniciarSesion() {
 
     if (!email || !password) {
         errorMsg.innerText = 'Completa todos los campos.';
-        errorMsg.style.display = 'block'; return;
+        errorMsg.style.display = 'block'; 
+        return;
     }
 
     btnLogin.innerHTML = '<span class="spinner"></span>Entrando...';
     btnLogin.disabled  = true;
     errorMsg.style.display = 'none';
 
-    const { error } = await clienteSupabase.auth.signInWithPassword({ email, password });
+    try {
+        const { error } = await clienteSupabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-        const msg = error.message.includes('fetch')
-            ? 'Error de conexión. Revisa tu internet.'
-            : 'Credenciales incorrectas.';
-        errorMsg.innerText = msg;
+        if (error) {
+            if (error.message.includes('Email not confirmed')) {
+                errorMsg.innerText = '⚠️ Debes confirmar tu correo electrónico. (Desactiva "Confirm email" en Supabase).';
+            } else {
+                errorMsg.innerText = 'Credenciales incorrectas.';
+            }
+            errorMsg.style.display = 'block';
+        } else {
+            document.getElementById('email').value    = '';
+            document.getElementById('password').value = '';
+            verificarSesion();
+        }
+    } catch (err) {
+        errorMsg.innerText = 'Error de red. El navegador está bloqueando la conexión.';
         errorMsg.style.display = 'block';
-    } else {
-        document.getElementById('email').value    = '';
-        document.getElementById('password').value = '';
-        verificarSesion();
+    } finally {
+        btnLogin.innerHTML = 'Entrar';
+        btnLogin.disabled  = false;
     }
-
-    btnLogin.innerHTML = 'Entrar';
-    btnLogin.disabled  = false;
 }
 
 async function cerrarSesion() {
@@ -640,7 +658,7 @@ async function cerrarSesion() {
     cambiarPestana('registro');
     document.getElementById('lista-totales').innerHTML = `
         <p style="text-align:center; color:var(--muted); padding:24px;
-           border:1px dashed var(--concrete); border-radius:12px;">
+           border:1px dashed var(--border); border-radius:12px;">
             Pulsa el botón para generar el desglose de horas.
         </p>`;
 }
@@ -748,7 +766,7 @@ async function guardarEnSupabase() {
     } catch (err) {
         const msg = err.message?.includes('fetch')
             ? 'Error de conexión. Revisa tu internet.'
-            : 'Error al guardar: ' + err.message;
+            : 'Error al guardar: Asegúrate de configurar las políticas RLS.';
         mostrarMensaje('registro', msg, 'error');
     } finally {
         btnGuardar.innerHTML = 'Registrar Jornada';
@@ -807,7 +825,7 @@ async function generarReporte() {
 
         if (data.length === 0) {
             contenedor.innerHTML = `<p style="text-align:center; color:var(--gold); padding:24px;
-                border:1px dashed var(--concrete); border-radius:12px;">
+                border:1px dashed var(--border); border-radius:12px;">
                 No hay turnos registrados en este periodo.
             </p>`;
             return;
@@ -843,7 +861,7 @@ async function generarReporte() {
                 const jh = Math.floor(j.mins/60), jm = j.mins%60;
                 return `<div class="detalle-item">
                     <span>🗓 ${j.fecha}</span>
-                    <span style="color:var(--text-dark)">${jm > 0 ? `${jh}h ${jm}m` : `${jh}h 00m`}</span>
+                    <span style="color:var(--text)">${jm > 0 ? `${jh}h ${jm}m` : `${jh}h 00m`}</span>
                 </div>`;
             }).join('');
             html += `<div class="empleado-reporte">
@@ -856,7 +874,7 @@ async function generarReporte() {
         }
         contenedor.innerHTML = html;
     } catch (err) {
-        const msg = err.message?.includes('fetch') ? 'Error de conexión.' : 'Error: ' + err.message;
+        const msg = err.message?.includes('fetch') ? 'Error de conexión.' : 'Error: Comprueba tu inicio de sesión.';
         contenedor.innerHTML = `<p style="color:var(--red); text-align:center; padding:20px;">${msg}</p>`;
     } finally {
         btnReporte.disabled = false;
