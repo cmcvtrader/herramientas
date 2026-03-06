@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turno Nocturno Zara - La Zenia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Paleta de colores oficial */
+            --marble-white: #fafaf9;
+            --concrete: #e7e5e4;
+            --gold: #f59e0b;
+            --sage-green: #84cc16;
+            --text-dark: #292524;
+            
+            /* Colores de apoyo */
+            --surface: #ffffff;
+            --red: #dc2626;
+            --muted: #78716c;
+            --serif: 'DM Serif Display', Georgia, serif;
+            --sans: 'DM Sans', system-ui, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background-color: var(--marble-white);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ── NOISE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0;
+        }
+
+        .app-container {
+            width: 100%; max-width: 430px;
+            background: var(--surface);
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 80px;
+            border-left: 1px solid var(--concrete);
+            border-right: 1px solid var(--concrete);
+        }
+
+        /* ── LOGIN ── */
+        .login-container {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            min-height: 100vh; padding: 32px;
+            background: var(--marble-white);
+            position: relative; overflow: hidden;
+            width: 100%;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,158,11,0.10) 0%, transparent 70%);
+            top: -100px; left: 50%; transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .login-box {
+            background: var(--surface);
+            padding: 40px 36px;
+            border-radius: 20px;
+            border: 1px solid var(--concrete);
+            width: 100%;
+            position: relative;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-logo-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .login-title {
+            font-family: var(--serif);
+            font-size: 1.7rem;
+            text-align: center;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .login-sub {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 32px;
+            letter-spacing: 0.04em;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            background: var(--marble-white);
+            border: 1px solid var(--concrete);
+            border-radius: 10px;
+            color: var(--text-dark);
+            font-family: var(--sans);
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .login-input::placeholder { color: var(--muted); }
+        .login-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+        }
+
+        #login-error {
+            display: none;
+            color: var(--red);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            background: rgba(248,113,113,0.08);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(248,113,113,0.2);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--concrete);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky; top: 0;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            z-index: 5;
+        }
+        .header-title {
+            font-family: var(--serif);
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            letter-spacing: 0.01em;
+        }
+        .btn-logout {
+            background: none; border: none;
+            color: var(--muted); font-size: 0.8rem;
+            cursor: pointer; font-family: var(--sans);
+            letter-spacing: 0.04em;
+            transition: color 0.2s;
+        }
+        .btn-logout:hover { color: var(--text-dark); }
+
+        /* ── CONTENT ── */
+        .content { padding: 24px 20px; }
+        .form-group { margin-bottom: 28px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--marble-white);
+            border: 1px solid var(--concrete);
+            border-radius: 10px;
+            color: var(--text-dark);
+            font-family: var(--sans);
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="date"]:focus,
+        input[type="time"]:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.6);
+        }
+
+        /* ── CARDS DE EMPLEADOS ── */
+        .member-card {
+            background: var(--marble-white);
+            border: 1px solid var(--concrete);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 8px;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        }
+        .member-card:hover { transform: translateX(2px); }
+        .member-card.active {
+            border-color: rgba(132,204,22,0.4);
+            background: rgba(132,204,22,0.05);
+        }
+        .member-card.jefe {
+            border-left: 3px solid var(--gold);
+        }
+        .member-card.jefe.active {
+            border-left-color: var(--gold);
+            border-color: rgba(245,158,11,0.35);
+            background: rgba(245,158,11,0.04);
+        }
+
+        .member-header {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .member-header label {
+            margin-bottom: 0; flex-grow: 1;
+            cursor: pointer; font-weight: 400;
+            font-size: 0.95rem; color: var(--text-dark);
+            text-transform: none; letter-spacing: 0;
+        }
+
+        .duracion-badge {
+            font-size: 0.75rem;
+            color: var(--sage-green);
+            font-weight: 600;
+            display: none;
+            white-space: nowrap;
+            background: rgba(132,204,22,0.15);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px; height: 18px;
+            accent-color: var(--sage-green);
+            cursor: pointer; flex-shrink: 0;
+        }
+
+        .member-times {
+            display: none; gap: 12px;
+            margin-top: 14px; padding-top: 14px;
+            border-top: 1px dashed var(--concrete);
+        }
+        .member-times.show { display: flex; }
+        .time-col { flex: 1; }
+        .time-col > span {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── BOTONES ── */
+        .btn-primary {
+            width: 100%; padding: 15px;
+            background: var(--gold);
+            color: var(--surface);
+            border: none; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 600;
+            font-family: var(--sans);
+            letter-spacing: 0.04em;
+            cursor: pointer; margin-top: 10px;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(245,158,11,0.25);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(245,158,11,0.35);
+        }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        .btn-secondary {
+            background: var(--marble-white);
+            color: var(--text-dark);
+            border: 1px solid var(--concrete);
+            box-shadow: none;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--concrete);
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* ── NAVBAR ── */
+        .nav-bar {
+            position: fixed; bottom: 0;
+            width: 100%; max-width: 430px;
+            display: flex;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--concrete);
+            z-index: 10;
+        }
+        .nav-item {
+            flex: 1; padding: 16px;
+            text-align: center; font-weight: 500;
+            font-size: 0.85rem; color: var(--muted);
+            cursor: pointer; transition: color 0.2s;
+            letter-spacing: 0.02em;
+        }
+        .nav-item.active {
+            color: var(--gold);
+            border-top: 2px solid var(--gold);
+            margin-top: -1px;
+        }
+
+        /* ── MENSAJES ── */
+        .mensaje {
+            display: none; padding: 13px 16px;
+            border-radius: 10px; text-align: center;
+            margin-bottom: 16px; font-weight: 500;
+            font-size: 0.9rem; animation: fadeUp 0.3s ease;
+        }
+        .mensaje.exito {
+            background: rgba(132,204,22,0.1);
+            color: var(--sage-green);
+            border: 1px solid rgba(132,204,22,0.3);
+        }
+        .mensaje.error {
+            background: rgba(248,113,113,0.1);
+            color: var(--red);
+            border: 1px solid rgba(248,113,113,0.2);
+        }
+
+        /* ── REPORTES ── */
+        .tienda-info {
+            text-align: center; margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--concrete);
+        }
+        
+        .reporte-banner-img {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .tienda-info h2 {
+            font-family: var(--serif);
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+        .tienda-info p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+
+        .periodo-card {
+            background: var(--marble-white);
+            border: 1px solid var(--concrete);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .periodo-label {
+            font-size: 0.72rem; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+        #texto-periodo {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            color: var(--gold);
+        }
+
+        .reporte-meta {
+            text-align: center; color: var(--muted);
+            padding: 10px 14px; font-size: 0.82rem;
+            margin-bottom: 16px;
+            background: var(--marble-white);
+            border-radius: 8px;
+            border: 1px solid var(--concrete);
+            letter-spacing: 0.02em;
+        }
+
+        .empleado-reporte {
+            border: 1px solid var(--concrete);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: var(--marble-white);
+            transition: border-color 0.2s;
+        }
+        .empleado-reporte:hover { border-color: var(--concrete); }
+
+        .empleado-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--concrete);
+            background: var(--marble-white);
+        }
+        .empleado-nombre {
+            font-weight: 500; color: var(--text-dark); font-size: 0.95rem;
+        }
+        .reporte-horas {
+            font-weight: 600; color: var(--sage-green);
+            font-size: 1rem;
+            background: rgba(132,204,22,0.15);
+            padding: 4px 10px; border-radius: 20px;
+        }
+
+        .empleado-detalle { padding: 4px 0; }
+        .detalle-item {
+            display: flex; justify-content: space-between;
+            font-size: 0.87rem; color: var(--muted);
+            padding: 9px 18px;
+            border-bottom: 1px solid var(--concrete);
+            transition: background 0.15s;
+        }
+        .detalle-item:last-child { border-bottom: none; }
+        .detalle-item:hover { background: var(--surface); }
+
+        /* ── SPINNER ── */
+        .spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle; margin-right: 7px;
+        }
+        .spinner.light {
+            border-color: rgba(0,0,0,0.12);
+            border-top-color: var(--gold);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hidden { display: none !important; }
+
+        /* ── PRINT ── */
+        @media print {
+            body { background: white; color: #111; }
+            .nav-bar, .btn-primary, .btn-secondary, .mensaje, .btn-logout { display: none !important; }
+            .app-container { box-shadow: none; max-width: 100%; padding-bottom: 0; background: white; border: none; }
+            .header { position: static; background: white; border-bottom: 2px solid #111; display: none; }
+            .empleado-reporte { border: 2px solid #ccc; page-break-inside: avoid; background: white; }
+            :root { --text-dark: #111; --muted: #555; --marble-white: #f9f9f9; --concrete: #ddd; }
+        }
+
+        /* ── STAGGERED ENTRANCE ── */
+        .member-card { animation: fadeUp 0.4s ease both; }
+        .member-card:nth-child(1) { animation-delay: 0.05s; }
+        .member-card:nth-child(2) { animation-delay: 0.10s; }
+        .member-card:nth-child(3) { animation-delay: 0.15s; }
+        .member-card:nth-child(4) { animation-delay: 0.20s; }
+        .member-card:nth-child(5) { animation-delay: 0.25s; }
+        .member-card:nth-child(6) { animation-delay: 0.30s; }
+    </style>
+</head>
+<body>
+
+<div id="pantalla-login" class="login-container">
+    <div class="login-box" style="max-width:380px;">
+        <img src="https://ulgzpjvpmamecsbyyldn.supabase.co/storage/v1/object/public/cmcvtrader/BANNER.png" alt="CMCV Software & AI Agents" class="login-logo-img">
+        
+        <h2 class="login-title">Acceso Supervisor</h2>
+        <p class="login-sub">Turno Nocturno · Zara La Zenia</p>
+        <div id="login-error">Credenciales incorrectas.</div>
+        <input type="email" id="email" class="login-input" placeholder="Correo electrónico" onkeydown="enterLogin(event)">
+        <input type="password" id="password" class="login-input" placeholder="Contraseña" onkeydown="enterLogin(event)">
+        <button id="btn-login" class="btn-primary" onclick="iniciarSesion()">Entrar</button>
+    </div>
+</div>
+
+<div id="pantalla-app" class="app-container hidden">
+
+    <div id="view-registro">
+        <div class="header">
+            <span class="header-title">📋 Control de Turnos</span>
+            <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+        </div>
+        <div class="content">
+            <div id="msg-registro" class="mensaje"></div>
+
+            <div class="form-group">
+                <label>Fecha de la jornada</label>
+                <input type="date" id="fecha-turno">
+            </div>
+
+            <div class="form-group">
+                <label>Equipo presente</label>
+                <div id="lista-empleados"></div>
+            </div>
+
+            <button id="btn-guardar" class="btn-primary" onclick="guardarEnSupabase()">
+                Registrar Jornada
+            </button>
+        </div>
+    </div>
+
+    <div id="view-reportes" class="hidden">
+        <div class="header">
+            <span class="header-title">📊 Reporte Supervisor</span>
+            <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+        </div>
+        <div class="content">
+            <div class="tienda-info">
+                <img src="https://ulgzpjvpmamecsbyyldn.supabase.co/storage/v1/object/public/cmcvtrader/BANNER.png" alt="CMCV Software & AI Agents" class="reporte-banner-img">
+                
+                <h2>Turno Nocturno Zara</h2>
+                <p>La Zenia, Orihuela Costa 03189<br>Alicante, España</p>
+            </div>
+
+            <div class="periodo-card">
+                <div>
+                    <div class="periodo-label">Periodo de corte</div>
+                    <div id="texto-periodo">Calculando...</div>
+                </div>
+                <span style="font-size:1.5rem;">📅</span>
+            </div>
+
+            <div id="lista-totales">
+                <p style="text-align:center; color:var(--muted); padding:24px;
+                   border:1px dashed var(--concrete); border-radius:12px;">
+                    Pulsa el botón para generar el desglose de horas.
+                </p>
+            </div>
+
+            <button class="btn-primary" onclick="generarReporte()" id="btn-reporte">
+                Generar Desglose de Horas
+            </button>
+            <button class="btn-primary btn-secondary" onclick="window.print()">
+                🖨️ Imprimir / Guardar PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" id="tab-registro" onclick="cambiarPestana('registro')">📋 Registro</div>
+        <div class="nav-item" id="tab-reportes" onclick="cambiarPestana('reportes')">📊 Reportes</div>
+    </div>
+</div>
+
+<script>
+// ─── CONFIGURACIÓN ────────────────────────────────────────────
+const SUPABASE_URL = 'https://ulgzpjvpmamecsbyyldn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MWP2a1Kh65mYHCn5C1KWOA_Y4R5Eo7V';
+let clienteSupabase;
+
+window.addEventListener('load', () => {
+    clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    verificarSesion();
+    renderEmpleados();
+    document.getElementById('fecha-turno').value = new Date().toLocaleDateString('en-CA');
+    calcularFechasPeriodo();
+    
+    // Detectar automáticamente si la sesión caduca
+    clienteSupabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT' || !session) {
+            document.getElementById('pantalla-login').classList.remove('hidden');
+            document.getElementById('pantalla-app').classList.add('hidden');
+        }
+    });
+});
+
+// ─── EMPLEADOS ────────────────────────────────────────────────
+const EMPLEADOS = [
+    { id: 'carlos',    nombre: 'Carlos Castillo',    jefe: true  },
+    { id: 'alejandro', nombre: 'Alejandro Martinez', jefe: false },
+    { id: 'jorge',     nombre: 'Jorge Gonzalez',     jefe: false },
+    { id: 'ana',       nombre: 'Ana Kaifer',         jefe: false },
+    { id: 'francisco', nombre: 'Francisco Garcia',   jefe: false },
+    { id: 'javier',    nombre: 'Javier Diaz',        jefe: false },
+];
+
+// ─── AUTH ─────────────────────────────────────────────────────
+async function verificarSesion() {
+    const { data: { session } } = await clienteSupabase.auth.getSession();
+    if (session) {
+        document.getElementById('pantalla-login').classList.add('hidden');
+        document.getElementById('pantalla-app').classList.remove('hidden');
+    } else {
+        document.getElementById('pantalla-login').classList.remove('hidden');
+        document.getElementById('pantalla-app').classList.add('hidden');
+    }
+}
+
+function enterLogin(e) { if (e.key === 'Enter') iniciarSesion(); }
+
+async function iniciarSesion() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btnLogin = document.getElementById('btn-login');
+    const errorMsg = document.getElementById('login-error');
+
+    if (!email || !password) {
+        errorMsg.innerText = 'Completa todos los campos.';
+        errorMsg.style.display = 'block'; return;
+    }
+
+    btnLogin.innerHTML = '<span class="spinner"></span>Entrando...';
+    btnLogin.disabled  = true;
+    errorMsg.style.display = 'none';
+
+    const { error } = await clienteSupabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        const msg = error.message.includes('fetch')
+            ? 'Error de conexión. Revisa tu internet.'
+            : 'Credenciales incorrectas.';
+        errorMsg.innerText = msg;
+        errorMsg.style.display = 'block';
+    } else {
+        document.getElementById('email').value    = '';
+        document.getElementById('password').value = '';
+        verificarSesion();
+    }
+
+    btnLogin.innerHTML = 'Entrar';
+    btnLogin.disabled  = false;
+}
+
+async function cerrarSesion() {
+    await clienteSupabase.auth.signOut();
+    verificarSesion();
+    cambiarPestana('registro');
+    document.getElementById('lista-totales').innerHTML = `
+        <p style="text-align:center; color:var(--muted); padding:24px;
+           border:1px dashed var(--concrete); border-radius:12px;">
+            Pulsa el botón para generar el desglose de horas.
+        </p>`;
+}
+
+// ─── RENDER EMPLEADOS ─────────────────────────────────────────
+function renderEmpleados() {
+    const lista = document.getElementById('lista-empleados');
+    lista.innerHTML = EMPLEADOS.map(emp => `
+        <div class="member-card ${emp.jefe ? 'jefe' : ''}" id="card-${emp.id}">
+            <div class="member-header">
+                <input type="checkbox" id="chk-${emp.id}"
+                    data-nombre="${emp.nombre}"
+                    onchange="toggleTimes('${emp.id}')">
+                <label for="chk-${emp.id}">
+                    ${emp.jefe ? `<strong style="color:var(--gold)">${emp.nombre}</strong> 👔` : emp.nombre}
+                </label>
+                <span class="duracion-badge" id="duracion-${emp.id}"></span>
+            </div>
+            <div class="member-times" id="times-${emp.id}">
+                <div class="time-col">
+                    <span>Entrada</span>
+                    <input type="time" id="in-${emp.id}" value="22:30"
+                        onchange="calcularHoras('${emp.id}')">
+                </div>
+                <div class="time-col">
+                    <span>Salida</span>
+                    <input type="time" id="out-${emp.id}" value="03:30"
+                        onchange="calcularHoras('${emp.id}')">
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ─── TOGGLE Y CÁLCULO ─────────────────────────────────────────
+function toggleTimes(id) {
+    const chk  = document.getElementById('chk-' + id);
+    const times = document.getElementById('times-' + id);
+    const card  = document.getElementById('card-' + id);
+    const badge = document.getElementById('duracion-' + id);
+    if (chk.checked) {
+        times.classList.add('show');
+        card.classList.add('active');
+        badge.style.display = 'block';
+        calcularHoras(id);
+    } else {
+        times.classList.remove('show');
+        card.classList.remove('active');
+        badge.style.display = 'none';
+    }
+}
+
+function calcularHoras(id) {
+    const entrada = document.getElementById('in-' + id).value;
+    const salida  = document.getElementById('out-' + id).value;
+    if (!entrada || !salida) return;
+    let [hIn, mIn]   = entrada.split(':').map(Number);
+    let [hOut, mOut] = salida.split(':').map(Number);
+    let minIn  = hIn * 60 + mIn;
+    let minOut = hOut * 60 + mOut;
+    if (minOut <= minIn) minOut += 1440;
+    const diff = minOut - minIn;
+    const h = Math.floor(diff / 60), m = diff % 60;
+    document.getElementById('duracion-' + id).innerText = m > 0 ? `${h}h ${m}m` : `${h}h`;
+}
+
+// ─── GUARDAR ──────────────────────────────────────────────────
+async function guardarEnSupabase() {
+    const fecha      = document.getElementById('fecha-turno').value;
+    const btnGuardar = document.getElementById('btn-guardar');
+    const checkboxes = document.querySelectorAll('#lista-empleados input[type="checkbox"]');
+    let registros    = [];
+
+    if (!fecha) { mostrarMensaje('registro', 'Selecciona una fecha.', 'error'); return; }
+
+    for (let chk of checkboxes) {
+        if (chk.checked) {
+            const id      = chk.id.replace('chk-', '');
+            const nombre  = chk.getAttribute('data-nombre');
+            const entrada = document.getElementById('in-' + id).value;
+            const salida  = document.getElementById('out-' + id).value;
+            if (!entrada || !salida) {
+                mostrarMensaje('registro', `Completa los horarios de ${nombre}.`, 'error');
+                return;
+            }
+            registros.push({ Fecha: fecha, Empleado: nombre, hora_entradas: entrada, hora_salida: salida });
+        }
+    }
+
+    if (registros.length === 0) {
+        mostrarMensaje('registro', 'Selecciona al menos un miembro del equipo.', 'error');
+        return;
+    }
+
+    if (!confirm(`¿Registrar ${registros.length} empleado(s) para el ${fecha}?`)) return;
+
+    btnGuardar.innerHTML = '<span class="spinner"></span>Guardando...';
+    btnGuardar.disabled  = true;
+
+    try {
+        const { error } = await clienteSupabase.from('Horarios').insert(registros);
+        if (error) throw error;
+        mostrarMensaje('registro', `✅ ${registros.length} jornada(s) guardadas correctamente.`, 'exito');
+        checkboxes.forEach(chk => { chk.checked = false; toggleTimes(chk.id.replace('chk-', '')); });
+    } catch (err) {
+        const msg = err.message?.includes('fetch')
+            ? 'Error de conexión. Revisa tu internet.'
+            : 'Error al guardar: ' + err.message;
+        mostrarMensaje('registro', msg, 'error');
+    } finally {
+        btnGuardar.innerHTML = 'Registrar Jornada';
+        btnGuardar.disabled  = false;
+    }
+}
+
+// ─── NAVEGACIÓN ───────────────────────────────────────────────
+function cambiarPestana(pestana) {
+    ['registro', 'reportes'].forEach(p => {
+        document.getElementById('view-' + p).classList.add('hidden');
+        document.getElementById('tab-' + p).classList.remove('active');
+    });
+    document.getElementById('view-' + pestana).classList.remove('hidden');
+    document.getElementById('tab-' + pestana).classList.add('active');
+    if (pestana === 'reportes') calcularFechasPeriodo();
+}
+
+// ─── REPORTES ─────────────────────────────────────────────────
+let fechaInicioGlobal, fechaFinGlobal;
+
+function calcularFechasPeriodo() {
+    const hoy = new Date();
+    const dia = hoy.getDate(), mes = hoy.getMonth(), anio = hoy.getFullYear();
+    let mesIni, anioIni, mesFin, anioFin;
+    if (dia >= 25) {
+        mesIni = mes; anioIni = anio; mesFin = mes + 1; anioFin = anio;
+        if (mesFin > 11) { mesFin = 0; anioFin++; }
+    } else {
+        mesIni = mes - 1; anioIni = anio; mesFin = mes; anioFin = anio;
+        if (mesIni < 0) { mesIni = 11; anioIni--; }
+    }
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    document.getElementById('texto-periodo').innerText =
+        `25 ${meses[mesIni]} ${anioIni} – 24 ${meses[mesFin]} ${anioFin}`;
+    fechaInicioGlobal = `${anioIni}-${String(mesIni + 1).padStart(2,'0')}-25`;
+    fechaFinGlobal    = `${anioFin}-${String(mesFin + 1).padStart(2,'0')}-24`;
+}
+
+async function generarReporte() {
+    const contenedor = document.getElementById('lista-totales');
+    const btnReporte = document.getElementById('btn-reporte');
+    calcularFechasPeriodo();
+
+    contenedor.innerHTML = `<p style="text-align:center; color:var(--muted); padding:24px;">
+        <span class="spinner light"></span>Descargando jornadas...
+    </p>`;
+    btnReporte.disabled = true;
+
+    try {
+        const { data, error } = await clienteSupabase
+            .from('Horarios').select('*')
+            .gte('Fecha', fechaInicioGlobal).lte('Fecha', fechaFinGlobal)
+            .order('Fecha', { ascending: true });
+        if (error) throw error;
+
+        if (data.length === 0) {
+            contenedor.innerHTML = `<p style="text-align:center; color:var(--gold); padding:24px;
+                border:1px dashed var(--concrete); border-radius:12px;">
+                No hay turnos registrados en este periodo.
+            </p>`;
+            return;
+        }
+
+        const porEmpleado = {};
+        data.forEach(t => {
+            // Protección contra filas vacías o corruptas
+            if (!t.hora_entradas || !t.hora_salida) return;
+
+            let [hIn, mIn]   = t.hora_entradas.split(':').map(Number);
+            let [hOut, mOut] = t.hora_salida.split(':').map(Number);
+            let minIn = hIn*60+mIn, minOut = hOut*60+mOut;
+            if (minOut <= minIn) minOut += 1440;
+            const mins = minOut - minIn;
+            if (!porEmpleado[t.Empleado]) porEmpleado[t.Empleado] = { totalMins: 0, jornadas: [] };
+            porEmpleado[t.Empleado].totalMins += mins;
+            const [yyyy,mm,dd] = t.Fecha.split('-');
+            porEmpleado[t.Empleado].jornadas.push({ fecha: `${dd}/${mm}/${yyyy}`, mins });
+        });
+
+        const totalJornadas  = data.length;
+        const totalEmpleados = Object.keys(porEmpleado).length;
+
+        let html = `<div class="reporte-meta">
+            ${totalJornadas} jornada(s) · ${totalEmpleados} empleado(s)
+        </div>`;
+
+        for (const [nombre, datos] of Object.entries(porEmpleado)) {
+            const h = Math.floor(datos.totalMins / 60), m = datos.totalMins % 60;
+            const total = m > 0 ? `${h}h ${m}m` : `${h}h 00m`;
+            const jornadasHtml = datos.jornadas.map(j => {
+                const jh = Math.floor(j.mins/60), jm = j.mins%60;
+                return `<div class="detalle-item">
+                    <span>🗓 ${j.fecha}</span>
+                    <span style="color:var(--text-dark)">${jm > 0 ? `${jh}h ${jm}m` : `${jh}h 00m`}</span>
+                </div>`;
+            }).join('');
+            html += `<div class="empleado-reporte">
+                <div class="empleado-header">
+                    <span class="empleado-nombre">${nombre}</span>
+                    <span class="reporte-horas">${total}</span>
+                </div>
+                <div class="empleado-detalle">${jornadasHtml}</div>
+            </div>`;
+        }
+        contenedor.innerHTML = html;
+    } catch (err) {
+        const msg = err.message?.includes('fetch') ? 'Error de conexión.' : 'Error: ' + err.message;
+        contenedor.innerHTML = `<p style="color:var(--red); text-align:center; padding:20px;">${msg}</p>`;
+    } finally {
+        btnReporte.disabled = false;
+    }
+}
+
+// ─── HELPER ───────────────────────────────────────────────────
+function mostrarMensaje(vista, texto, tipo) {
+    const el = document.getElementById('msg-' + vista);
+    el.className = `mensaje ${tipo}`;
+    el.innerText = texto;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => el.style.display = 'none', 4500);
+}
+</script>
+</body>
+</html>
