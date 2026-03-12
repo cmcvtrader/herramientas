@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestor de Horas Extras - Equipo</title>
+    <style>
+        :root {
+            /* Paleta Oficial Requerida */
+            --marble-white: #fafaf9;
+            --concrete: #e7e5e4;
+            --gold: #f59e0b;
+            --sage-green: #84cc16;
+            --text-dark: #292524;
+            --danger-bg: #fee2e2;
+            --danger-text: #ef4444;
+            --surface: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--marble-white);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* LOGIN STYLES */
+        .login-container { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box;}
+        .login-box { background: var(--surface); padding: 40px 30px; border-radius: 12px; border: 1px solid var(--concrete); width: 100%; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); box-sizing: border-box;}
+        .login-title { color: var(--text-dark); margin-bottom: 5px; font-size: 1.5rem; }
+        .login-sub { color: #57534e; font-size: 0.9rem; margin-bottom: 25px; }
+        #login-error { display: none; color: var(--danger-text); background: var(--danger-bg); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; }
+        .login-box input { width: 100%; margin-bottom: 15px; box-sizing: border-box; }
+
+        /* APP STYLES */
+        .app-container { width: 100%; max-width: 1100px; background: var(--surface); padding: 30px; border-radius: 12px; border: 1px solid var(--concrete); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); align-self: flex-start; box-sizing: border-box;}
+        .hidden { display: none !important; }
+
+        header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 2px solid var(--sage-green); padding-bottom: 20px; gap: 15px; }
+        .header-titles h1 { margin: 0; color: var(--text-dark); font-size: 1.8rem; line-height: 1.2;}
+        .header-titles p { color: #57534e; margin-top: 5px; margin-bottom: 0; font-size: 0.95rem;}
+        .highlight-rule { color: var(--gold); font-weight: bold; }
+        .btn-logout { background: none; border: none; color: #78716c; cursor: pointer; text-decoration: underline; font-size: 0.9rem; padding: 0; margin-top: 5px; white-space: nowrap;}
+
+        /* FORMULARIO DE ENTRADA Y FILTROS */
+        .input-group, .filter-card { background: var(--marble-white); padding: 20px; border: 1px solid var(--concrete); border-radius: 8px; margin-bottom: 30px; }
+        .input-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: end; }
+        .filter-card { border-left: 5px solid var(--sage-green); margin-bottom: 20px; }
+
+        .field { display: flex; flex-direction: column; width: 100%; }
+        .field-row { display: flex; flex-direction: row; gap: 8px; align-items: flex-end; width: 100%; }
+        .field-full { grid-column: 1 / -1; display: flex; flex-direction: column; }
+
+        label { font-weight: 600; font-size: 0.9em; margin-bottom: 5px; color: var(--text-dark); }
+        input, select { padding: 10px; border: 1px solid var(--concrete); border-radius: 5px; font-size: 1em; color: var(--text-dark); background-color: var(--surface); transition: border-color 0.2s; width: 100%; box-sizing: border-box; }
+        input:focus, select:focus { outline: none; border-color: var(--gold); }
+
+        button.btn-primary { background-color: var(--gold); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: opacity 0.3s; width: 100%; box-sizing: border-box;}
+        button.btn-primary:hover { opacity: 0.9; }
+        button.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.new-emp-btn { background-color: var(--sage-green); color: white; border: none; padding: 11px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85em; white-space: nowrap; height: 100%;}
+
+        /* CONTENEDOR DE TABLAS RESPONSIVE */
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--concrete); }
+        
+        table { width: 100%; border-collapse: collapse; background: var(--surface); min-width: 600px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--concrete); }
+        th { background-color: var(--text-dark); color: var(--marble-white); font-weight: 500; font-size: 0.95em; white-space: nowrap; }
+        #summaryTable { min-width: 100%; }
+
+        .extras-col { font-weight: bold; color: var(--gold); }
+        .comentarios-col { font-size: 0.9em; color: #57534e; min-width: 150px; display: inline-block; }
+        .nota-vacia { color: #a8a29e; font-style: italic; font-size: 0.85em; }
+
+        .delete-btn { background: var(--danger-bg); border: none; color: var(--danger-text); cursor: pointer; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+        .delete-btn:hover { background: #fca5a5; }
+
+        .worker-header { color: var(--gold); border-bottom: 2px solid var(--concrete); padding-bottom: 5px; margin-bottom: 10px; margin-top: 0; font-size: 1.3em; }
+        .worker-section { margin-bottom: 40px; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; margin-bottom: 15px; border-left: 5px solid var(--gold); padding-left: 10px; flex-wrap: wrap; gap: 10px;}
+        .section-header h2 { margin: 0; font-size: 1.4rem; color: var(--text-dark); }
+        
+        .print-btn { padding: 8px 15px; background: var(--sage-green); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap;}
+        .summary-card { background: rgba(132, 204, 22, 0.1); border: 1px solid var(--sage-green); padding: 15px; border-radius: 8px; margin-bottom: 20px; color: var(--text-dark); font-size: 0.95em; }
+
+        .report-controls { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .solo-print { display: none; }
+
+        /* MEDIA QUERIES PARA MÓVILES */
+        @media (max-width: 768px) {
+            body { padding: 0; background-color: var(--surface); }
+            .app-container { padding: 15px; border-radius: 0; border: none; box-shadow: none; }
+            header { flex-direction: column; align-items: flex-start; }
+            .header-titles h1 { font-size: 1.5rem; }
+            .btn-logout { margin-top: 10px; padding: 5px 0; }
+            .input-group { grid-template-columns: 1fr; gap: 15px; padding: 15px; }
+            .filter-card .field-row { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .filter-card .field { width: 100%; }
+            .field-row { width: 100%; }
+            #btn-guardar { width: 100% !important; margin-top: 10px; }
+            .field-full .field-row { flex-direction: column; align-items: stretch; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+            .section-header h2 { font-size: 1.2rem; }
+            .report-controls { flex-direction: column; gap: 10px; }
+            .report-controls button { width: 100%; padding: 12px; }
+            th, td { padding: 10px 8px; font-size: 0.9em; }
+        }
+
+        /* OPTIMIZACIÓN ESTRICTA PARA PDF / IMPRESIÓN */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; margin: 0; color: black; font-size: 10pt; }
+            .app-container { box-shadow: none; padding: 0; border: none; max-width: 100%; margin: 0; background: white; }
+            .solo-print { display: block !important; text-align: center; margin-bottom: 20px; border-bottom: 2px dashed black; padding-bottom: 15px; }
+            .solo-print h2 { margin: 0 0 5px 0; font-size: 1.4rem; text-transform: uppercase; color: black; }
+            .solo-print p { margin: 0; font-size: 1rem; color: #333; }
+            .table-responsive { border: none; overflow-x: visible; margin-bottom: 20px;}
+            table { min-width: 100%; border: 1px solid #ccc; }
+            th { background-color: #f3f4f6 !important; color: black !important; border-bottom: 2px solid #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 8px;}
+            td { border-bottom: 1px solid #e5e7eb; color: black; padding: 8px; }
+            .worker-section { page-break-inside: avoid; margin-bottom: 30px; }
+            .worker-header { color: black; border-bottom: 2px solid black; font-size: 1.2em; padding-bottom: 2px; margin-bottom: 8px;}
+            .summary-card { background: none; border: 1px solid black; padding: 10px;}
+            .section-header { border-left: none; margin-top: 20px; border-bottom: 1px solid black; padding-left: 0; color: black; }
+            .extras-col { color: black !important; font-weight: bold; }
+            body.modo-resumido #seccion-diario { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="pantalla-login" class="login-container">
+    <div class="login-box">
+        <h2 class="login-title">Control de Turnos</h2>
+        <p class="login-sub">Acceso privado del equipo</p>
+        <div id="login-error"></div>
+        <input type="email" id="email" placeholder="Correo electrónico" onkeydown="if(event.key==='Enter') iniciarSesion()">
+        <input type="password" id="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') iniciarSesion()">
+        <button id="btn-login" class="btn-primary" onclick="iniciarSesion()">Iniciar Sesión</button>
+    </div>
+</div>
+
+<div id="pantalla-app" class="app-container hidden">
+    <div class="solo-print" id="cabecera-pdf">
+        <h2 id="pdf-titulo">Reporte de Horas</h2>
+        <p id="pdf-periodo">Periodo: --/--/---- al --/--/----</p>
+    </div>
+
+    <header class="no-print">
+        <div class="header-titles">
+            <h1>⏰ Control de Nómina - Equipo</h1>
+            <p><strong>NUEVA REGLA APLICADA:</strong></p>
+            <p style="font-size: 0.85em; margin-top: 3px;">
+                <span class="highlight-rule">Miércoles y Domingos:</span> Se descuentan 4h (Pedro/Francisco) o 3h (Resto del equipo).<br>
+                <span class="highlight-rule" style="color: var(--sage-green);">Resto de días (L, M, J, V, S):</span> Todas las horas trabajadas cuentan como EXTRAS directas.
+            </p>
+        </div>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    </header>
+
+    <div class="input-group no-print">
+        <div class="field">
+            <label>Fecha del Turno</label>
+            <input type="date" id="dateInput">
+        </div>
+        
+        <div class="field" style="flex-grow: 1;">
+            <label>Trabajador</label>
+            <div class="field-row">
+                <select id="employeeInput">
+                    <option value="">Cargando equipo...</option>
+                </select>
+                <button class="new-emp-btn" onclick="agregarTrabajador()" title="Añadir a alguien nuevo a la lista">+ Nuevo</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Hora Entrada</label>
+            <input type="time" id="startInput" value="22:30">
+        </div>
+        
+        <div class="field">
+            <label>Hora Salida</label>
+            <input type="time" id="endInput" value="04:30">
+        </div>
+
+        <div class="field-full">
+            <label>Comentarios de la jornada (Opcional)</label>
+            <div class="field-row">
+                <input type="text" id="comentariosInput" placeholder="Ej. Faltó mercancía, turno muy tranquilo...">
+                <button class="btn-primary" id="btn-guardar" onclick="addShift()" style="width: auto; padding: 10px 20px;">+ Guardar Turno</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-card no-print">
+        <h3 style="margin-top:0; margin-bottom:10px; font-size: 1.1em; color: var(--text-dark);">🔍 Consultar Histórico</h3>
+        <div class="field-row">
+            
+            <div class="field">
+                <label>Ver trabajador:</label>
+                <select id="filtroEmpleado">
+                    <option value="TODOS">Todos los trabajadores</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Desde Fecha:</label>
+                <input type="date" id="filtroDesde">
+            </div>
+            
+            <div class="field">
+                <label>Hasta Fecha:</label>
+                <input type="date" id="filtroHasta">
+            </div>
+            
+            <div class="field">
+                <button class="btn-primary" onclick="cargarTurnos()" style="background-color: var(--sage-green); padding: 11px 15px;">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-controls no-print">
+        <button class="btn-primary" onclick="imprimirReporte('detallado')" style="width:auto; flex-grow:1; background-color: var(--text-dark);">
+            🖨️ PDF DETALLADO (Diario + Totales)
+        </button>
+        <button class="btn-primary" onclick="imprimirReporte('resumido')" style="width:auto; flex-grow:1;">
+            🖨️ PDF RESUMIDO (Solo Totales)
+        </button>
+    </div>
+
+    <div id="seccion-diario">
+        <div class="section-header">
+            <h2>📝 Registro Diario por Trabajador</h2>
+        </div>
+        
+        <div id="shiftsContainer">
+            <div style="text-align: center; color: var(--concrete); padding: 20px;">Cargando turnos...</div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2>📊 Resumen del Periodo Consultado</h2>
+    </div>
+    <div class="summary-card">
+        <p style="margin:0;"><strong>Nota:</strong> Los cálculos de abajo toman en cuenta los días base (Miércoles/Domingos) y convierten los demás días automáticamente al 100% de horas extras.</p>
+    </div>
+    
+    <div class="table-responsive">
+        <table id="summaryTable">
+            <thead>
+                <tr>
+                    <th>Trabajador</th>
+                    <th>Turnos Trabajados</th>
+                    <th>Total Horas Extras (Periodo)</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://ulgzpjvpmamecsbyyldn.supabase.co'; 
+    const SUPABASE_KEY = 'sb_publishable_MWP2a1Kh65mYHCn5C1KWOA_Y4R5Eo7V'; 
+    const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let shifts = [];
+    let listaEmpleados = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('dateInput').valueAsDate = new Date();
+        
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1).toISOString().split('T')[0];
+        const ultimoDiaMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).toISOString().split('T')[0];
+        
+        document.getElementById('filtroDesde').value = primerDiaMes;
+        document.getElementById('filtroHasta').value = ultimoDiaMes;
+
+        verificarSesion();
+        
+        clienteSupabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT' || !session) { mostrarLogin(); }
+        });
+    });
+
+    async function verificarSesion() {
+        try {
+            const { data: { session } } = await clienteSupabase.auth.getSession();
+            if (session) {
+                mostrarApp();
+                cargarEmpleados();
+                cargarTurnos();
+            } else { mostrarLogin(); }
+        } catch (err) {}
+    }
+
+    async function iniciarSesion() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('btn-login');
+        const err = document.getElementById('login-error');
+
+        if (!email || !password) return;
+        btn.innerText = 'Entrando...'; btn.disabled = true; err.style.display = 'none';
+
+        try {
+            const { error } = await clienteSupabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            document.getElementById('email').value = ''; document.getElementById('password').value = '';
+            verificarSesion();
+        } catch (e) {
+            err.innerText = 'Correo o contraseña incorrectos.'; err.style.display = 'block';
+        } finally { btn.innerText = 'Iniciar Sesión'; btn.disabled = false; }
+    }
+
+    async function cerrarSesion() { await clienteSupabase.auth.signOut(); }
+    function mostrarApp() { document.getElementById('pantalla-login').classList.add('hidden'); document.getElementById('pantalla-app').classList.remove('hidden'); }
+    function mostrarLogin() { document.getElementById('pantalla-login').classList.remove('hidden'); document.getElementById('pantalla-app').classList.add('hidden'); }
+
+    async function cargarEmpleados() {
+        try {
+            const { data: empData } = await clienteSupabase.from('zara_empleados').select('nombre');
+            const { data: horData } = await clienteSupabase.from('Horarios').select('Empleado');
+            
+            let nombresSet = new Set();
+            if (empData) empData.forEach(e => { if(e.nombre) nombresSet.add(e.nombre.trim()); });
+            if (horData) horData.forEach(h => { if(h.Empleado) nombresSet.add(h.Empleado.trim()); });
+            
+            listaEmpleados = Array.from(nombresSet).sort();
+            
+            const selectInput = document.getElementById('employeeInput');
+            const selectFiltro = document.getElementById('filtroEmpleado');
+            let currentFiltro = selectFiltro.value || 'TODOS';
+            
+            if(listaEmpleados.length === 0) {
+                selectInput.innerHTML = '<option value="">Añade un trabajador primero...</option>';
+                return;
+            }
+            
+            selectInput.innerHTML = '';
+            selectFiltro.innerHTML = '<option value="TODOS">Todos los trabajadores</option>';
+            
+            listaEmpleados.forEach(nombre => { 
+                selectInput.innerHTML += `<option value="${nombre}">${nombre}</option>`; 
+                selectFiltro.innerHTML += `<option value="${nombre}">${nombre}</option>`; 
+            });
+
+            selectFiltro.value = currentFiltro;
+
+        } catch (error) { console.error("Error empleados:", error); }
+    }
+
+    async function agregarTrabajador() {
+        const nombre = prompt("Introduce el nombre del nuevo trabajador:");
+        if (!nombre || nombre.trim() === '') return;
+        try {
+            const { error } = await clienteSupabase.from('zara_empleados').insert([{ nombre: nombre.trim() }]);
+            if (error) throw error;
+            alert("✅ Trabajador añadido a la base de datos.");
+            cargarEmpleados(); 
+        } catch (error) { alert("Error al añadir trabajador: " + error.message); }
+    }
+
+    async function cargarTurnos() {
+        const contenedor = document.getElementById('shiftsContainer');
+        contenedor.innerHTML = '<div style="text-align: center; color: var(--concrete); padding: 20px;">Cargando información del periodo...</div>';
+
+        try {
+            let query = clienteSupabase.from('Horarios').select('*').order('Fecha', { ascending: false });
+            const filtroDesde = document.getElementById('filtroDesde').value;
+            const filtroHasta = document.getElementById('filtroHasta').value;
+
+            if (filtroDesde) query = query.gte('Fecha', filtroDesde);
+            if (filtroHasta) query = query.lte('Fecha', filtroHasta);
+
+            const { data, error } = await query;
+            if (error) throw error;
+            
+            shifts = data;
+            renderTables();
+        } catch (error) { 
+            console.error("Error turnos:", error); 
+            contenedor.innerHTML = '<div style="text-align: center; color: var(--danger-text); padding: 20px;">Error al cargar.</div>';
+        }
+    }
+
+    async function addShift() {
+        const btn = document.getElementById('btn-guardar');
+        const date = document.getElementById('dateInput').value;
+        const employee = document.getElementById('employeeInput').value;
+        const start = document.getElementById('startInput').value;
+        const end = document.getElementById('endInput').value;
+        const comments = document.getElementById('comentariosInput').value.trim();
+
+        if (!date || !employee || !start || !end) { alert("Completa la fecha, el trabajador y las horas."); return; }
+
+        btn.innerText = 'Guardando...'; btn.disabled = true;
+
+        try {
+            const { error } = await clienteSupabase.from('Horarios').insert([{
+                Fecha: date, Empleado: employee, hora_entradas: start, hora_salida: end, comentarios: comments !== "" ? comments : null
+            }]);
+            if (error) throw error;
+            
+            document.getElementById('comentariosInput').value = ''; 
+            cargarTurnos();
+            cargarEmpleados(); 
+        } catch (error) { alert("Error al guardar: " + error.message); } 
+        finally { btn.innerText = '+ Guardar Turno'; btn.disabled = false; }
+    }
+
+    async function deleteShift(id) {
+        if(confirm('¿Borrar este registro permanentemente?')) {
+            try {
+                const { error } = await clienteSupabase.from('Horarios').delete().eq('id', id);
+                if (error) throw error;
+                cargarTurnos();
+            } catch (error) { alert("Error al borrar: " + error.message); }
+        }
+    }
+
+    // EL NUEVO MOTOR INTELIGENTE DE FECHAS Y NOMBRES FLEXIBLES
+    function calculateTime(start, end, empleadoNombre, fechaTurno) {
+        if(!start || !end || !fechaTurno) return { totalDecimal: 0, extrasDecimal: 0, extrasMinutes: 0 };
+        
+        start = start.substring(0, 5); end = end.substring(0, 5);
+        let [startH, startM] = start.split(':').map(Number); 
+        let [endH, endM] = end.split(':').map(Number);
+        
+        let startMinutes = (startH * 60) + startM; 
+        let endMinutes = (endH * 60) + endM;
+        if (endMinutes < startMinutes) endMinutes += (24 * 60);
+
+        let diffMinutes = endMinutes - startMinutes;
+        
+        // 1. Determinar el día de la semana (0: Domingo, 1: Lunes... 3: Miércoles)
+        let [year, month, day] = fechaTurno.split('-');
+        let fechaObj = new Date(year, month - 1, day);
+        let diaSemana = fechaObj.getDay();
+
+        let baseMinutes = 0; // Por defecto TODOS los días son extra completos.
+
+        // 2. Si es Domingo (0) o Miércoles (3), aplicamos la resta de horas base
+        if (diaSemana === 0 || diaSemana === 3) {
+            baseMinutes = 180; // 3h para el equipo general
+            
+            let nombreNormalizado = empleadoNombre ? empleadoNombre.toLowerCase().trim() : "";
+            // Buscar inteligentemente nombres compuestos
+            if (nombreNormalizado.includes("pedro") || nombreNormalizado.includes("francisco") || nombreNormalizado.includes("fran")) { 
+                baseMinutes = 240; // 4h para Pedro y Fran
+            }
+        }
+        
+        let extrasMinutes = Math.max(0, diffMinutes - baseMinutes);
+        return { 
+            totalDecimal: diffMinutes / 60, 
+            extrasDecimal: extrasMinutes / 60,
+            extrasMinutes: extrasMinutes // Usamos los minutos puros para cálculos perfectos sin fallos decimales
+        };
+    }
+
+    function minutesToHM(totalMinutes) {
+        const h = Math.floor(totalMinutes / 60); const m = Math.round(totalMinutes % 60);
+        return `${h}h ${m < 10 ? '0' + m : m}m`;
+    }
+
+    function decimalToHM(decimal) { return minutesToHM(decimal * 60); }
+
+    function renderTables() {
+        const container = document.getElementById('shiftsContainer');
+        container.innerHTML = '';
+        const filtroEmpleado = document.getElementById('filtroEmpleado').value;
+
+        if (shifts.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: var(--concrete); padding: 20px;">No hay turnos registrados en este periodo.</div>';
+            calculateSummary(); return;
+        }
+
+        let empleadosEnPantalla = [...new Set(shifts.map(s => s.Empleado))];
+        
+        if (filtroEmpleado !== "TODOS") {
+            empleadosEnPantalla = empleadosEnPantalla.filter(e => e === filtroEmpleado);
+            if(empleadosEnPantalla.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--concrete); padding: 20px;">No hay turnos de ${filtroEmpleado} en estas fechas.</div>`;
+                calculateSummary(); return;
+            }
+        }
+
+        empleadosEnPantalla.forEach(emp => {
+            let empShifts = shifts.filter(s => s.Empleado === emp);
+            if (empShifts.length === 0) return;
+
+            empShifts.sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+
+            let tableHTML = `<div class="worker-section"><h3 class="worker-header">👤 ${emp}</h3><div class="table-responsive"><table><thead><tr><th>Fecha</th><th>Horario</th><th>Total</th><th>Extras</th><th>Comentarios</th><th class="no-print">Acción</th></tr></thead><tbody>`;
+
+            empShifts.forEach(shift => {
+                // Pasamos también la fecha a la función para saber qué día de la semana fue
+                const result = calculateTime(shift.hora_entradas, shift.hora_salida, shift.Empleado, shift.Fecha);
+                const totalStr = decimalToHM(result.totalDecimal); 
+                const extrasStr = minutesToHM(result.extrasMinutes); // Mostramos el formato exacto en horas y minutos
+                const horaEntrada = shift.hora_entradas ? shift.hora_entradas.substring(0, 5) : '--:--';
+                const horaSalida = shift.hora_salida ? shift.hora_salida.substring(0, 5) : '--:--';
+                const textoComentario = shift.comentarios ? `<span class="comentarios-col">${shift.comentarios}</span>` : `<span class="nota-vacia">Sin notas</span>`;
+
+                // Añadimos una marca visual pequeña si el día fue Miércoles (X) o Domingo (D) para que sepas por qué aplicó descuento
+                let [y, m, d] = shift.Fecha.split('-');
+                let fechaObj = new Date(y, m - 1, d);
+                let diaLetra = fechaObj.getDay() === 0 ? ' (Dom)' : (fechaObj.getDay() === 3 ? ' (Mié)' : '');
+
+                tableHTML += `<tr><td>${formatDate(shift.Fecha)}<span style="font-size:0.8em; color:var(--muted)">${diaLetra}</span></td><td style="white-space:nowrap;">${horaEntrada} - ${horaSalida}</td><td>${totalStr}</td><td class="extras-col">${extrasStr}</td><td>${textoComentario}</td><td class="no-print"><button class="delete-btn" onclick="deleteShift(${shift.id})">Borrar</button></td></tr>`;
+            });
+
+            tableHTML += `</tbody></table></div></div>`;
+            container.innerHTML += tableHTML;
+        });
+        calculateSummary();
+    }
+
+    function calculateSummary() {
+        const summaryBody = document.getElementById('summaryTableBody');
+        summaryBody.innerHTML = '';
+        const filtroEmpleado = document.getElementById('filtroEmpleado').value;
+        
+        let empleadosEnPantalla = [...new Set(shifts.map(s => s.Empleado))];
+        if (filtroEmpleado !== "TODOS") { empleadosEnPantalla = empleadosEnPantalla.filter(e => e === filtroEmpleado); }
+        
+        empleadosEnPantalla.forEach(emp => {
+            const empShifts = shifts.filter(s => s.Empleado === emp);
+            if (empShifts.length > 0) {
+                // Sumamos minutos puros para evitar fallos de decimales al tener muchos turnos
+                const totalExtrasMinutos = empShifts.reduce((sum, shift) => { 
+                    return sum + calculateTime(shift.hora_entradas, shift.hora_salida, shift.Empleado, shift.Fecha).extrasMinutes; 
+                }, 0);
+                
+                const highlightColor = totalExtrasMinutos > 0 ? 'var(--gold)' : 'var(--sage-green)';
+                
+                summaryBody.innerHTML += `<tr><td><strong>${emp}</strong></td><td>${empShifts.length} días</td><td style="font-size: 1.1em; color: ${highlightColor}"><strong>${minutesToHM(totalExtrasMinutos)}</strong></td></tr>`;
+            }
+        });
+    }
+
+    function formatDate(dateString) {
+        if(!dateString) return '';
+        const [year, month, day] = dateString.split('-'); return `${day}/${month}`;
+    }
+
+    function imprimirReporte(tipo) {
+        const empleadoSeleccionado = document.getElementById('filtroEmpleado').value;
+        const desde = document.getElementById('filtroDesde').value;
+        const hasta = document.getElementById('filtroHasta').value;
+        
+        let tipoReporte = empleadoSeleccionado === 'TODOS' ? 'REPORTE GRUPAL' : `REPORTE INDIVIDUAL: ${empleadoSeleccionado}`;
+        if (tipo === 'resumido') tipoReporte += ' (Solo Totales)';
+        
+        document.getElementById('pdf-titulo').innerText = tipoReporte;
+        document.getElementById('pdf-periodo').innerText = `Periodo Consultado: ${formatDate(desde)} al ${formatDate(hasta)}`;
+
+        if (tipo === 'resumido') {
+            document.body.classList.add('modo-resumido');
+        }
+
+        window.print();
+        document.body.classList.remove('modo-resumido');
+    }
+</script>
+
+</body>
+</html>
