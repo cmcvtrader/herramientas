@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación | Gestor de Horas Extras - Turnos Nocturnos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* PALETA CORPORATIVA DEL GESTOR (Conservada) */
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --light: #f4f6f7;
+            --border: #dde1e3;
+            --text: #333333;
+            --muted: #7f8c8d;
+            --font-sans: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --gold: #c8892a; /* Firma CMCV */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-sans); background-color: var(--light); color: var(--text); overflow-x: hidden; }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; z-index: 1000;
+        }
+        .nav-logo { font-family: var(--font-sans); font-weight: 700; font-size: 1.3rem; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 8px;}
+        .nav-logo span { color: var(--secondary); }
+        .nav-links a {
+            text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem;
+            padding: 8px 18px; border-radius: 6px; transition: all 0.3s;
+        }
+        .nav-links a.volver { border: 1px solid var(--border); background: white; }
+        .nav-links a.volver:hover { border-color: var(--primary); color: var(--primary); }
+        .nav-links a.entrar { background: var(--secondary); color: white; margin-left: 10px; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); }
+        .nav-links a.entrar:hover { background: #2980b9; transform: translateY(-2px); }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 160px 5% 100px; text-align: center; background: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-badge {
+            background: var(--secondary-light); color: var(--secondary);
+            padding: 6px 16px; border-radius: 100px; font-weight: 600; font-size: 0.85rem;
+            margin-bottom: 24px; border: 1px solid #d6eaf8; display: inline-block; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .hero h1 { font-family: var(--font-serif); font-size: clamp(2.5rem, 5vw, 4rem); color: var(--primary); line-height: 1.15; margin-bottom: 24px; max-width: 850px; }
+        .hero p { font-size: 1.15rem; color: var(--muted); max-width: 650px; line-height: 1.6; margin-bottom: 40px; }
+        .hero-img { font-size: 5rem; margin-bottom: 20px; display: block; animation: pulse 3s ease-in-out infinite; }
+        
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* ── CARACTERÍSTICAS ── */
+        .section-pad { padding: 80px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-family: var(--font-sans); font-size: 2.2rem; font-weight: 700; color: var(--primary); margin-bottom: 50px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .card {
+            background: white; border: 1px solid var(--border); border-radius: 12px;
+            padding: 40px 30px; text-align: left; transition: transform 0.3s, box-shadow 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--secondary); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(44, 62, 80, 0.08); }
+        .card-icon { font-size: 2.2rem; margin-bottom: 20px; display: inline-block; color: var(--secondary); }
+        .card h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 15px; font-weight: 700; }
+        .card p { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+
+        .card.alert::before { background: var(--accent); }
+        .card.alert .card-icon { color: var(--accent); }
+
+        /* ── BASES TECNOLÓGICAS ── */
+        .tech-banner {
+            background: var(--primary); color: white;
+            padding: 80px 5%; text-align: center; margin-top: 40px;
+        }
+        .tech-banner h2 { font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 20px; }
+        .tech-banner p { max-width: 700px; margin: 0 auto 40px; color: #bdc3c7; line-height: 1.6; font-size: 1.1rem; }
+        .tech-logos { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .tech-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; font-weight: 500; font-size: 0.95rem; }
+
+        /* ── FOOTER CMCV TRADER ── */
+        footer { background: #1a252f; color: white; padding: 60px 5% 40px; text-align: center; }
+        .footer-logo { font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 20px; color: white; letter-spacing: 0.02em; }
+        .footer-logo em { color: var(--gold); font-style: italic; }
+        .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .social-link {
+            width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s; text-decoration: none;
+        }
+        .social-link:hover { background: var(--gold); border-color: var(--gold); transform: translateY(-3px); }
+        .social-link svg { width: 18px; height: 18px; fill: currentColor; }
+        .copyright { color: rgba(255,255,255,0.4); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; margin-top: 20px; }
+
+        @media (max-width: 768px) {
+            .nav-links a.volver { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="nav-logo">⏰ Gestor de <span>Nóminas</span></a>
+        <div class="nav-links">
+            <a href="https://cmcvtrader.github.io/x/" class="volver">← Volver a CMCV Trader</a>
+            <a href="calculadora.html" class="entrar">Abrir Calculadora</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <span class="hero-badge">Control de Equipos y Turnos</span>
+        <span class="hero-img">👔</span>
+        <h1>Adiós a los errores calculando las horas de tu equipo.</h1>
+        <p>Una herramienta diseñada para automatizar el cálculo de turnos nocturnos y aplicar reglas de negocio exactas. Ingresa la hora de entrada y salida, y el sistema hará el resto por ti.</p>
+    </section>
+
+    <section class="section-pad">
+        <h2 class="section-title">¿Para qué se usa esta herramienta?</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">🌙</div>
+                <h3>Cruce de Medianoche</h3>
+                <p>Calcular turnos nocturnos suele romper las hojas de cálculo tradicionales. Nuestro algoritmo detecta automáticamente si un trabajador entra un día y sale al día siguiente, ajustando los tiempos sin errores.</p>
+            </div>
+            <div class="card alert">
+                <div class="card-icon">⏱️</div>
+                <h3>Regla de Horas Extras</h3>
+                <p>Aplicamos lógicas de negocio reales. El sistema toma la jornada completa del trabajador y le descuenta automáticamente las <strong>3 horas de su jornada base</strong>, calculando únicamente las horas extras efectivas.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3>Resumen Acumulado</h3>
+                <p>No más sumas manuales a fin de mes. Al registrar los turnos, la herramienta agrupa a cada empleado y calcula su bolsa total de horas extras acumuladas, destacándolas visualmente si están en positivo.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🖨️</div>
+                <h3>Reportes Listos (PDF)</h3>
+                <p>Con un solo clic, la interfaz oculta los botones de edición y genera un documento limpio y profesional, listo para imprimir o enviar en PDF al departamento de Recursos Humanos o Gestoría.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-banner">
+        <h2>¿Sobre qué bases trabaja?</h2>
+        <p>Esta aplicación funciona bajo un entorno de ejecución del lado del cliente puro (Client-Side Rendering). Esto significa que los cálculos matemáticos de tiempo y conversiones decimales se procesan instantáneamente en tu navegador, garantizando privacidad absoluta de los datos de tus empleados al no requerir bases de datos externas.</p>
+        <div class="tech-logos">
+            <span class="tech-badge">⚙️ Algoritmo de Tiempo JS</span>
+            <span class="tech-badge">⚡ Cero Latencia (Local State)</span>
+            <span class="tech-badge">📄 Exportación Nativa a PDF</span>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">CMCV <em>Trader</em></div>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/cmcvtrader" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="https://github.com/cmcvtrader" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
+                <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </a>
+            <a href="https://x.com/cmcvtrader" target="_blank" rel="noopener" class="social-link" aria-label="X">
+                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://instagram.com/cmcvtrader" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+        </div>
+        <div class="copyright">CMCV Trader© 2026 · Todos los derechos reservados</div>
+    </footer>
+
+</body>
+</html>
